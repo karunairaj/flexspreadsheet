@@ -7,7 +7,7 @@ On January 17, Updated version is available to download. And sample page also up
 
 = Details =
 
-  * Fix on *merge*, rows and column merge is very flexible
+  * Fix on *merge*
   * Keyboard action support for keys (pagedown, pageup, arrow down, arrow up, arrow left, arrow right)
   * License watermark is added.
 
