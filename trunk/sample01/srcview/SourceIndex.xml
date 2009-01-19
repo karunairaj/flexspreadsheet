@@ -14,9 +14,8 @@
 		</node>
 		<node label="libs">
 		</node>
-		<node icon="classpathIcon" label="src" expanded="true">
-			<node icon="mxmlAppIcon" selected="true" label="MecGridSample.mxml" url="source/MecGridSample.mxml.html"/>
-			<node label="test.xml" url="source/test.xml.txt"/>
-		</node>
+		<node icon="mxmlAppIcon" selected="true" label="MecGridCellBorder.mxml" url="source/MecGridCellBorder.mxml.html"/>
+		<node icon="mxmlIcon" label="MecGridSample.mxml" url="source/MecGridSample.mxml.html"/>
+		<node label="test.xml" url="source/test.xml.txt"/>
 	</nodes>
 </index>
