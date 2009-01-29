@@ -12,10 +12,8 @@
 			<node icon="htmlIcon" label="index.template.html" url="source/html-template/index.template.html"/>
 			<node icon="swfIcon" label="playerProductInstall.swf" url="source/html-template/playerProductInstall.swf"/>
 		</node>
-		<node label="libs">
-		</node>
+		<node icon="imageIcon" label="cell_coloring.gif" url="source/cell_coloring.gif.html"/>
 		<node icon="mxmlAppIcon" selected="true" label="MecGridCellBorder.mxml" url="source/MecGridCellBorder.mxml.html"/>
 		<node icon="mxmlIcon" label="MecGridSample.mxml" url="source/MecGridSample.mxml.html"/>
-		<node label="test.xml" url="source/test.xml.txt"/>
 	</nodes>
 </index>
