@@ -2,6 +2,7 @@
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" xmlns:ns1="com.mechan.MecGrid.*" backgroundColor="#ffffff" creationComplete="initApp()" viewSourceURL="srcview/index.html">
 <mx:Script>
 	<![CDATA[
+		import com.mechan.MecGrid.mecGridClasses.Cell;
 		import mx.core.IFlexDisplayObject;
 		import com.mechan.utils.Format;
 		import mx.collections.ArrayCollection;
@@ -22,15 +23,34 @@
 		} 
 		
 // DOUBLE CLICK CELL EDITING
+		private var _editing_row:int = -1;
+		private var _editing_col:int = -1;
+		
 		private function beginEditCellHandler(event:MecGridEvent):void
 		{
+			txtFormula.text = m_text;
+			
+			_editing_row = -1;
+			_editing_col = -1;
+			
 			if (event.edit_colIndex == 6)
 			{
 				mgrid.EditCell(event, CellOp.EDIT_COMBOBOX, ["combo selection 1", "combo selection 2", "combo selection 3"]);
 			}
 			else
 			{
-				mgrid.EditCell(event, CellOp.EDIT_TEXT);
+				var m_text:String = mgrid.get_cell(CellOp.TEXT, event.edit_rowIndex, event.edit_colIndex) as String;
+				if (m_text.charAt(0) == "=")
+				{
+					_editing_row = event.edit_rowIndex;
+					_editing_col = event.edit_colIndex;
+					
+					this.txtFormula.text = m_text;
+				}
+				else
+				{
+					mgrid.EditCell(event, CellOp.EDIT_TEXT);
+				}
 			}
 		}
 
@@ -221,6 +241,14 @@
 			
 			copt.validateNow();
 		}
+		
+		private function formulaKeyDownHandler(event:KeyboardEvent):void
+		{
+			if (this._editing_col > -1 && _editing_row > -1 && event.keyCode == Keyboard.ENTER)
+			{
+				mgrid.set_cell(CellOp.TEXT, _editing_row, _editing_col, txtFormula.text);
+			}
+		}
 // end of toolbar support
 	]]>
 </mx:Script>
@@ -235,6 +263,8 @@
 			<mx:Button id="uiAlignRight" icon="@Embed('/assets/align_right.gif')" width="20" height="20" toggle="true" click="updateGridRangeAlign('right')"/>
 			<mx:Spacer width="5"/>
 			<mx:Button label="Column Options" click="openColumnOptionWindow()"/>
+			<mx:Label text="Formula"/>
+			<mx:TextInput id="txtFormula" width="100%" keyDown="formulaKeyDownHandler(event)"/>
 		</mx:HBox>
 		<ns1:MecGrid id="mgrid" width="100%" height="100%"/>
 	</mx:VBox>
