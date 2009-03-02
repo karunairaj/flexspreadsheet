@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="400" height="300" title="Column Property" xmlns:ns1="com.mechan.MecGrid.*" showCloseButton="true" close="closeWindow(event)">
+<mx:Script>
+	<![CDATA[
+		import com.mechan.MecGrid.MecGrid;
+		import com.mechan.MecGrid.mecGridClasses.CellOp;
+		import com.mechan.MecGrid.mecGridClasses.MecGridEvent;
+		
+		import mx.events.CloseEvent;
+		import mx.managers.PopUpManager;
+		
+		private function closeWindowAction(cmd:String):void
+		{
+			if (_target && cmd == "confirm")
+			{
+				var i:int;
+				
+				for (i=prop.Rows.fixed; i < prop.Rows.count-1; i++)
+				{
+					var format:String = prop.get_cell(CellOp.TEXT, i, 1).toString();
+					_target.Cols.item(i - prop.Rows.fixed).formatString = format;
+					var b_visible:Boolean = prop.get_cell(CellOp.BOOLEAN, i, 2) as Boolean;
+					_target.Cols.item(i - prop.Rows.fixed).visible = b_visible;
+					
+					if (b_visible == false)
+					{
+						_target.Cols.item(i - prop.Rows.fixed).autowidth = false;
+						_target.Cols.item(i - prop.Rows.fixed).width = 0;	
+					}
+					else
+					{
+						_target.Cols.item(i - prop.Rows.fixed).autowidth = true;
+					}
+					
+					_target.Cols.item(i - prop.Rows.fixed).editable = prop.get_cell(CellOp.BOOLEAN, i, 3) as Boolean;
+				}
+				
+				_target.redraw = true;
+			}
+			closeWindow(null);
+		}
+		
+		private var _target:MecGrid;
+		
+		public function set TargetGrid(value:MecGrid):void
+		{
+			_target = value;
+			
+			callLater(initializeGridColumnOption);
+		}
+		
+		private function initializeGridColumnOption():void
+		{
+			prop.redraw = false;
+			
+			prop.editable = true;
+			
+			prop.Cols.count = 4;
+			prop.Rows.count = 0;
+			
+			prop.AddRow(0, "No.;FormatString;Visible;Editable", ";");
+			
+			prop.Rows.fixed = 1;
+			prop.Cols.item(1).editable = true;
+			prop.Cols.item(2).datatype = CellOp.BOOLEAN;
+			
+			if (_target == null)
+			{
+				_target.redraw = true;
+				return;
+			}
+			
+			var i:int;
+			
+			for (i=0; i < _target.Cols.count; i++)
+			{
+				var rindex:int = prop.AddRow(prop.Rows.count, i + ";@" + _target.Cols.item(i).formatString, ";@");
+				prop.set_cell(CellOp.BOOLEAN, rindex, 2, _target.Cols.item(i).visible);
+				prop.set_cell(CellOp.BOOLEAN, rindex, 3, _target.Cols.item(i).editable);  
+			}
+			
+			prop.redraw = true;
+		}
+		
+		private function closeWindow(event:CloseEvent):void
+		{
+			PopUpManager.removePopUp(this);
+		}
+		
+		private function beginEditCellHandler(event:MecGridEvent):void
+		{
+			if (event.edit_colIndex == 1)
+			{
+				prop.EditCell(event, CellOp.EDIT_TEXT);
+			}
+		}
+	]]>
+</mx:Script>
+	<mx:Button x="141" y="228" label="OK" click="closeWindowAction('confirm')"/>
+	<mx:Button x="192" y="228" label="Cancel" click="closeWindowAction('cancel')"/>
+	<ns1:MecGrid id="prop" x="0" y="0" width="380" height="220" beginEditCell="beginEditCellHandler(event)"/>
+</mx:TitleWindow>
