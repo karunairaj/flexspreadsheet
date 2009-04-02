@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<index>
+	<title>Source of MecGridSubTotal</title>
+	<nodes>
+		<node icon="classpathIcon" label="src" expanded="true">
+			<node icon="mxmlAppIcon" selected="true" label="MecGridSubTotal.mxml" url="source/MecGridSubTotal.mxml.html"/>
+		</node>
+	</nodes>
+</index>
