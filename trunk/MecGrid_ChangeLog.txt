@@ -1,0 +1,21 @@
+********* MecGrid Update History *********
+(VERSION 1.1.0) : Distributed on April 3, 2009
+  - MecGridWizard Style Definition Support
+    Change style settings
+      (demo program : MecGridSubTotal)
+    
+  - Sub/Grand Total Support
+  	API appended : 
+  	 clearSubTotal
+  	 AddSubTotal
+  	 updateSubTotal
+  	  Enumerations : MecGridConst.SUBTOTAL_SUM
+  	  							 MecGridConst.SUBTOTAL_BELOWDATA
+  	  							 MecGridConst.SUBTOTAL_ABOVEDATA
+  		(demo program : MecGridSubTotal)
+  		
+	- Styles for column
+		 Apply Custom style by definition name
+	   --- sample code ---
+	   mgrid.Cols.item(1).style = "customstyle";
+	  
