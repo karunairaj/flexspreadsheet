@@ -10,8 +10,8 @@
        AddSubTotal
        updateSubTotal
         Enumerations : MecGridConst.SUBTOTAL_SUM
-                                     MecGridConst.SUBTOTAL_BELOWDATA
-                                     MecGridConst.SUBTOTAL_ABOVEDATA
+                       MecGridConst.SUBTOTAL_BELOWDATA
+                       MecGridConst.SUBTOTAL_ABOVEDATA
           (demo program : MecGridSubTotal)
           
   - Styles for column
