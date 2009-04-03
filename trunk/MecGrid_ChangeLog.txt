@@ -5,17 +5,17 @@
       (demo program : MecGridSubTotal)
     
   - Sub/Grand Total Support
-  	API appended : 
-  	 clearSubTotal
-  	 AddSubTotal
-  	 updateSubTotal
-  	  Enumerations : MecGridConst.SUBTOTAL_SUM
-  	  							 MecGridConst.SUBTOTAL_BELOWDATA
-  	  							 MecGridConst.SUBTOTAL_ABOVEDATA
-  		(demo program : MecGridSubTotal)
-  		
-	- Styles for column
-		 Apply Custom style by definition name
-	   --- sample code ---
-	   mgrid.Cols.item(1).style = "customstyle";
-	  
+      API appended : 
+       clearSubTotal
+       AddSubTotal
+       updateSubTotal
+        Enumerations : MecGridConst.SUBTOTAL_SUM
+                                     MecGridConst.SUBTOTAL_BELOWDATA
+                                     MecGridConst.SUBTOTAL_ABOVEDATA
+          (demo program : MecGridSubTotal)
+          
+  - Styles for column
+       Apply Custom style by definition name
+       --- sample code ---
+       mgrid.Cols.item(1).style = "customstyle";
+      
