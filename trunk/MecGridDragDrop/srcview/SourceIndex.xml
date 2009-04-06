@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<index>
+	<title>Source of MecGridDragDrop</title>
+	<nodes>
+		<node icon="classpathIcon" label="src" expanded="true">
+			<node icon="packageIcon" label="com.MecCustom" expanded="true">
+				<node icon="actionScriptIcon" label="MecGridExt.as" url="source/com/MecCustom/MecGridExt.as.html"/>
+			</node>
+			<node icon="mxmlAppIcon" selected="true" label="MecGridDragDrop.mxml" url="source/MecGridDragDrop.mxml.html"/>
+		</node>
+	</nodes>
+</index>
