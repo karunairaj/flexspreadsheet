@@ -1,4 +1,17 @@
 ********* MecGrid Update History *********
+(VERSION 1.1.2) : Distributed on April 6, 2009
+  - MecGridWizard (New datatype for Numeric)
+    Column with numeric datatype sort in numerical order (ascending / descending)
+  - Drag and Drop Example
+    (demo program : http://flexspreadsheet.googlecode.com/svn/trunk/MecGridDragDrop/MecGridDragDrop.html)
+    * Column Moving
+    * Row Moving (If selection mode is row)
+    * Cell Copying (If selection mode is cell)
+    
+  - MecGridExt Inherited Classes
+    * Recommend MecGrid Developers to inherit MecGrid and override protected and public class api.
+    
+    
 (VERSION 1.1.0) : Distributed on April 3, 2009
   - MecGridWizard Style Definition Support
     Change style settings
