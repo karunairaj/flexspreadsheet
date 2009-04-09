@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<index>
+	<title>Source of MecGridFiltering</title>
+	<nodes>
+		<node icon="classpathIcon" label="src" expanded="true">
+			<node icon="mxmlAppIcon" selected="true" label="MecGridFiltering.mxml" url="source/MecGridFiltering.mxml.html"/>
+		</node>
+	</nodes>
+</index>
