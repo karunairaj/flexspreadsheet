@@ -3,6 +3,12 @@
 	<title>Source of MecGridFiltering</title>
 	<nodes>
 		<node icon="classpathIcon" label="src" expanded="true">
+			<node label="assets">
+				<node icon="imageIcon" label="downArrow.png" url="source/assets/downArrow.png.html"/>
+				<node icon="imageIcon" label="scrolltrack.png" url="source/assets/scrolltrack.png.html"/>
+				<node icon="imageIcon" label="thumb.png" url="source/assets/thumb.png.html"/>
+				<node icon="imageIcon" label="upArrow.png" url="source/assets/upArrow.png.html"/>
+			</node>
 			<node icon="mxmlAppIcon" selected="true" label="MecGridFiltering.mxml" url="source/MecGridFiltering.mxml.html"/>
 		</node>
 	</nodes>
