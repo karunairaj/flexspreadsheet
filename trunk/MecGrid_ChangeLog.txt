@@ -3,6 +3,9 @@
   - Fix on LargeData Binding
   - Tested 100000 count row data with 7 columns
   - Support filtering for Numeric and Statusbar type
+  
+  - OLAP Drill detail support 
+    * Double Click on data cell will show the filtered original data list.
 
 (VERSION 1.1.3) : Distributed on April 9, 2009
   - Filtering Support 
