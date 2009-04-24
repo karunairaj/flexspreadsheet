@@ -100,21 +100,25 @@
         <span class="ActionScriptBracket/Brace">}</span>
     <span class="ActionScriptBracket/Brace">]]</span><span class="ActionScriptOperator">&gt;</span>
 <span class="MXMLSpecial_Tag">&lt;/mx:Script&gt;</span>
-<span class="MXMLComponent_Tag">&lt;MecGrid:MecGrid</span><span class="MXMLDefault_Text"> id=&quot;</span><span class="MXMLString">mgrid</span><span class="MXMLDefault_Text">&quot; bottom=&quot;</span><span class="MXMLString">40</span><span class="MXMLDefault_Text">&quot; right=&quot;</span><span class="MXMLString">10</span><span class="MXMLDefault_Text">&quot; top=&quot;</span><span class="MXMLString">80</span><span class="MXMLDefault_Text">&quot; left=&quot;</span><span class="MXMLString">10</span><span class="MXMLDefault_Text">&quot; dataProvider=&quot;</span><span class="MXMLString">{</span><span class="ActionScriptDefault_Text">mdata</span><span class="MXMLString">}</span><span class="MXMLDefault_Text">&quot;</span><span class="MXMLComponent_Tag">&gt;</span>
-    <span class="MXMLComponent_Tag">&lt;MecGrid:ResourceString&gt;</span>
-eNrF1clu2zAQBuBjgT4FQV0auKhNLY4DWQUSBz31UjTI1WCtsURAIl1yvOR9+qClRC+QExrqwc3F
-0lCj4f8JMPjhz/S7MPj1IyFTtUKhJFmoymR0QslS7CDXamurcF+5ZyNKatAFzN0bGY27C/ND77qW
-r7rnh7HtVFPa+SsNPDclAGb0ya5BBYumtVY5ZJQ1bUrjYTNGCWqAjYBt294Us9NeCDvklShkDdLO
-G5+tuO0zmtBhi3YpTXN/rIjktd3YFnM7MOfIlwIq+5JLBjklG2HErwraAJAL5G3xjTZfT8gcdm0W
-vka1FTmWbd/+LmZuJr6soJu4SXWqDkmZbVkqXXM0qIUsMkpJaT8Y6Iz+bAOl7uJEbylYR7FQa4n6
-pReCeRDjDiLpIOJ/RMxcnnR/9TPCLkNgP0P4Pww2TNr8+NNHnfS/kfUKH3nCTyb+8GzUK33wOQiC
-L0FwUjzbPKi0SZlB8mPNETT5dH/jN8VnprCXKfaY7sJrmkKZH00PF0zJmSnqZUp8ptE1TZE+mWYX
-TOMzU9zLNH4XU4zl0fR4wXTbMfFN0ct06zGxJLoC6n4DmhdAMvs3GjwMZoPHGzIkcepZ359Jw+Oh
-NB22p/NfW+95aQ==
-    <span class="MXMLComponent_Tag">&lt;/MecGrid:ResourceString&gt;</span>
-<span class="MXMLComponent_Tag">&lt;/MecGrid:MecGrid&gt;</span>
-    <span class="MXMLComponent_Tag">&lt;mx:Label</span><span class="MXMLDefault_Text"> x=&quot;</span><span class="MXMLString">10</span><span class="MXMLDefault_Text">&quot; y=&quot;</span><span class="MXMLString">10</span><span class="MXMLDefault_Text">&quot; text=&quot;</span><span class="MXMLString">MecGrid Application Demo with Froze Cell</span><span class="MXMLDefault_Text">&quot; fontWeight=&quot;</span><span class="MXMLString">bold</span><span class="MXMLDefault_Text">&quot; fontSize=&quot;</span><span class="MXMLString">20</span><span class="MXMLDefault_Text">&quot; color=&quot;</span><span class="MXMLString">#FDFE88</span><span class="MXMLDefault_Text">&quot;</span><span class="MXMLComponent_Tag">/&gt;</span>
-    <span class="MXMLComponent_Tag">&lt;mx:Button</span><span class="MXMLDefault_Text"> x=&quot;</span><span class="MXMLString">10</span><span class="MXMLDefault_Text">&quot; y=&quot;</span><span class="MXMLString">49</span><span class="MXMLDefault_Text">&quot; label=&quot;</span><span class="MXMLString">Froze Current Cell</span><span class="MXMLDefault_Text">&quot; click=&quot;</span><span class="ActionScriptDefault_Text">fixCellHandler</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptString">&apos;frozen&apos;</span><span class="ActionScriptBracket/Brace">)</span><span class="MXMLDefault_Text">&quot;</span><span class="MXMLComponent_Tag">/&gt;</span>
-    <span class="MXMLComponent_Tag">&lt;mx:Button</span><span class="MXMLDefault_Text"> x=&quot;</span><span class="MXMLString">150</span><span class="MXMLDefault_Text">&quot; y=&quot;</span><span class="MXMLString">49</span><span class="MXMLDefault_Text">&quot; label=&quot;</span><span class="MXMLString">Un Froze</span><span class="MXMLDefault_Text">&quot; click=&quot;</span><span class="ActionScriptDefault_Text">fixCellHandler</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptString">&apos;unfrozen&apos;</span><span class="ActionScriptBracket/Brace">)</span><span class="MXMLDefault_Text">&quot;</span><span class="MXMLComponent_Tag">/&gt;</span>
+    <span class="MXMLComponent_Tag">&lt;mx:Label</span><span class="MXMLDefault_Text"> x=&quot;</span><span class="MXMLString">10</span><span class="MXMLDefault_Text">&quot; y=&quot;</span><span class="MXMLString">10</span><span class="MXMLDefault_Text">&quot; text=&quot;</span><span class="MXMLString">FREEZE ROW AND COLUMN</span><span class="MXMLDefault_Text">&quot; styleName=&quot;</span><span class="MXMLString">demoTitle</span><span class="MXMLDefault_Text">&quot;</span><span class="MXMLComponent_Tag">/&gt;</span>
+    <span class="MXMLComponent_Tag">&lt;mx:VBox</span><span class="MXMLDefault_Text"> left=&quot;</span><span class="MXMLString">10</span><span class="MXMLDefault_Text">&quot; right=&quot;</span><span class="MXMLString">10</span><span class="MXMLDefault_Text">&quot; top=&quot;</span><span class="MXMLString">40</span><span class="MXMLDefault_Text">&quot; bottom=&quot;</span><span class="MXMLString">10</span><span class="MXMLDefault_Text">&quot;</span><span class="MXMLComponent_Tag">&gt;</span>
+        <span class="MXMLComponent_Tag">&lt;mx:HBox</span><span class="MXMLDefault_Text"> width=&quot;</span><span class="MXMLString">100%</span><span class="MXMLDefault_Text">&quot;</span><span class="MXMLComponent_Tag">&gt;</span>
+            <span class="MXMLComponent_Tag">&lt;mx:Button</span><span class="MXMLDefault_Text"> label=&quot;</span><span class="MXMLString">Froze Current Cell</span><span class="MXMLDefault_Text">&quot; click=&quot;</span><span class="ActionScriptDefault_Text">fixCellHandler</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptString">&apos;frozen&apos;</span><span class="ActionScriptBracket/Brace">)</span><span class="MXMLDefault_Text">&quot;</span><span class="MXMLComponent_Tag">/&gt;</span>
+            <span class="MXMLComponent_Tag">&lt;mx:Button</span><span class="MXMLDefault_Text"> label=&quot;</span><span class="MXMLString">Un Froze</span><span class="MXMLDefault_Text">&quot; click=&quot;</span><span class="ActionScriptDefault_Text">fixCellHandler</span><span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptString">&apos;unfrozen&apos;</span><span class="ActionScriptBracket/Brace">)</span><span class="MXMLDefault_Text">&quot;</span><span class="MXMLComponent_Tag">/&gt;</span>
+        <span class="MXMLComponent_Tag">&lt;/mx:HBox&gt;</span>
+        <span class="MXMLComponent_Tag">&lt;MecGrid:MecGrid</span><span class="MXMLDefault_Text"> id=&quot;</span><span class="MXMLString">mgrid</span><span class="MXMLDefault_Text">&quot; width=&quot;</span><span class="MXMLString">100%</span><span class="MXMLDefault_Text">&quot; height=&quot;</span><span class="MXMLString">100%</span><span class="MXMLDefault_Text">&quot; dataProvider=&quot;</span><span class="MXMLString">{</span><span class="ActionScriptDefault_Text">mdata</span><span class="MXMLString">}</span><span class="MXMLDefault_Text">&quot;</span><span class="MXMLComponent_Tag">&gt;</span>
+            <span class="MXMLComponent_Tag">&lt;MecGrid:ResourceString&gt;</span>
+        eNrF1clu2zAQBuBjgT4FQV0auKhNLY4DWQUSBz31UjTI1WCtsURAIl1yvOR9+qClRC+QExrqwc3F
+        0lCj4f8JMPjhz/S7MPj1IyFTtUKhJFmoymR0QslS7CDXamurcF+5ZyNKatAFzN0bGY27C/ND77qW
+        r7rnh7HtVFPa+SsNPDclAGb0ya5BBYumtVY5ZJQ1bUrjYTNGCWqAjYBt294Us9NeCDvklShkDdLO
+        G5+tuO0zmtBhi3YpTXN/rIjktd3YFnM7MOfIlwIq+5JLBjklG2HErwraAJAL5G3xjTZfT8gcdm0W
+        vka1FTmWbd/+LmZuJr6soJu4SXWqDkmZbVkqXXM0qIUsMkpJaT8Y6Iz+bAOl7uJEbylYR7FQa4n6
+        pReCeRDjDiLpIOJ/RMxcnnR/9TPCLkNgP0P4Pww2TNr8+NNHnfS/kfUKH3nCTyb+8GzUK33wOQiC
+        L0FwUjzbPKi0SZlB8mPNETT5dH/jN8VnprCXKfaY7sJrmkKZH00PF0zJmSnqZUp8ptE1TZE+mWYX
+        TOMzU9zLNH4XU4zl0fR4wXTbMfFN0ct06zGxJLoC6n4DmhdAMvs3GjwMZoPHGzIkcepZ359Jw+Oh
+        NB22p/NfW+95aQ==
+            <span class="MXMLComponent_Tag">&lt;/MecGrid:ResourceString&gt;</span>
+        <span class="MXMLComponent_Tag">&lt;/MecGrid:MecGrid&gt;</span>        
+    <span class="MXMLComponent_Tag">&lt;/mx:VBox&gt;</span>
 <span class="MXMLComponent_Tag">&lt;/mx:Canvas&gt;</span></pre></body>
 </html>
