@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="300" xmlns:MecGrid="com.mechan.MecGrid.*" creationComplete="initApp()">
+<mx:Script>
+	<![CDATA[
+		import mx.collections.ArrayCollection;
+		import com.mechan.MecGrid.mecGridClasses.*;
+		
+		private function initApp():void
+		{
+			mgrid.redraw = false;
+			mgrid.editable = true;
+			mgrid.Rows.count = 100;
+			mgrid.addEventListener(MecGridEvent.BEGIN_EDIT_CELL, beginEditCellHandler);
+			mgrid.redraw = true;
+		}
+
+// DOUBLE CLICK CELL EDITING
+		private var _editing_row:int = -1;
+		private var _editing_col:int = -1;
+		
+		private function beginEditCellHandler(event:MecGridEvent):void
+		{
+			txtFormula.text = m_text;
+			
+			_editing_row = -1;
+			_editing_col = -1;
+			
+			var m_text:String = mgrid.get_cell(CellOp.TEXT, event.edit_rowIndex, event.edit_colIndex) as String;
+			if (m_text.charAt(0) == "=")
+			{
+				_editing_row = event.edit_rowIndex;
+				_editing_col = event.edit_colIndex;
+				
+				this.txtFormula.text = m_text;
+			}
+			else
+			{
+				mgrid.EditCell(event, CellOp.EDIT_TEXT);
+			}
+		}
+		
+// toolbar support
+		private function updateGridRangeFont():void
+		{
+			var selcells:ArrayCollection = mgrid.SelectedItems;
+			var m_fontstyle:int = FontStyleEnum.NONE;
+			
+			if (uiFontBold.selected == true)
+			{
+				m_fontstyle |= FontStyleEnum.BOLD;
+			}
+			
+			if (uiFontItalic.selected == true)
+			{
+				m_fontstyle |= FontStyleEnum.ITALIC;
+			}
+			
+			if (uiFontUnderline.selected == true)
+			{
+				m_fontstyle |= FontStyleEnum.UNDERLINE;
+			}
+			
+			if (selcells && selcells.length > 0)
+			{
+				var i:int;
+				
+				for (i=0; i < selcells.length; i++)
+				{
+					var sel:SelectedItem = selcells[i];
+					mgrid.set_cell(CellOp.FONT_STYLE, sel.rowIndex, sel.colIndex, m_fontstyle);
+				}
+			}
+		}
+		
+		private function updateGridRangeAlign(loc:String):void
+		{
+			var m_align:int;
+			
+			switch (loc)
+			{
+			case "left":
+				uiAlignMiddle.selected = false;
+				uiAlignRight.selected = false;
+				m_align = CellOp.TEXTALIGN_LEFT_CENTER;
+				break;
+			case "center":
+				uiAlignLeft.selected = false;
+				uiAlignRight.selected = false;
+				m_align = CellOp.TEXTALIGN_CENTER_CENTER;
+				break;
+			case "right":
+				uiAlignLeft.selected = false;
+				uiAlignRight.selected = false;
+				m_align = CellOp.IMAGE_ALIGN_RIGHT_CENTER;
+				break;
+			}
+			
+			var selcells:ArrayCollection = mgrid.SelectedItems;
+			
+			if (selcells && selcells.length > 0)
+			{
+				var i:int;
+				
+				for (i=0; i < selcells.length; i++)
+				{
+					var sel:SelectedItem = selcells[i];
+					mgrid.set_cell(CellOp.TEXTALIGN, sel.rowIndex, sel.colIndex, m_align);
+				}
+				
+				mgrid.redraw = true;
+			}
+		}
+				
+		private function formulaKeyDownHandler(event:KeyboardEvent):void
+		{
+			if (this._editing_col > -1 && _editing_row > -1 && event.keyCode == Keyboard.ENTER)
+			{
+				mgrid.set_cell(CellOp.TEXT, _editing_row, _editing_col, txtFormula.text);
+			}
+		}
+		
+		private function updateFontColor():void
+		{
+			var selcolor:uint = uiFontColorPicker.selectedIndex;
+			
+			var selcells:ArrayCollection = mgrid.SelectedItems;
+			
+			if (selcells && selcells.length > 0)
+			{
+				var i:int;
+				
+				for (i=0; i < selcells.length; i++)
+				{
+					var sel:SelectedItem = selcells[i];
+					mgrid.set_cell(CellOp.STYLE_FORECOLOR, sel.rowIndex, sel.colIndex, uiFontColorPicker.selectedColor);
+				}
+				
+				mgrid.redraw = true;
+			}
+		}
+// end of toolbar support
+	]]>
+</mx:Script>
+<mx:Label x="10" y="10" text="SPREAD SHEET" styleName="demoTitle"/>
+<mx:VBox right="10" left="10" top="40" bottom="10" verticalGap="3">
+	<mx:HBox id="uiToolbar" width="100%" includeInLayout="true" visible="true" horizontalGap="2">
+		<mx:Button id="uiFontBold" icon="@Embed('/assets/font_bold.gif')" width="20" height="20" toggle="true" click="updateGridRangeFont()"/>
+		<mx:Button id="uiFontItalic" icon="@Embed('/assets/font_italic.gif')" width="20" height="20" toggle="true" click="updateGridRangeFont()"/>
+		<mx:Button id="uiFontUnderline" icon="@Embed('/assets/font_underline.gif')" width="20" height="20" toggle="true" click="updateGridRangeFont()"/>
+		<mx:Spacer width="5"/>
+		<mx:Button id="uiAlignLeft" icon="@Embed('/assets/align_left.gif')" width="20" height="20" toggle="true" click="updateGridRangeAlign('left')"/>
+		<mx:Button id="uiAlignMiddle" icon="@Embed('/assets/align_center.gif')" width="20" height="20" toggle="true" click="updateGridRangeAlign('center')"/>
+		<mx:Button id="uiAlignRight" icon="@Embed('/assets/align_right.gif')" width="20" height="20" toggle="true" click="updateGridRangeAlign('right')"/>
+		<mx:Spacer width="5"/>
+		<mx:Label text="FontColor"/>
+		<mx:ColorPicker id="uiFontColorPicker"/>
+		<mx:Button label="apply" click="updateFontColor()"/>
+		<mx:Spacer width="5"/>
+		<mx:Label text="Formula"/>
+		<mx:TextInput id="txtFormula" width="100%" keyDown="formulaKeyDownHandler(event)"/>
+	</mx:HBox>
+	<MecGrid:MecGrid id="mgrid" width="100%" height="100%">
+		<MecGrid:ResourceXML>
+			<mx:XML xmlns="">
+<List>
+  <option cols="27" fixedrows="0" fixedcols="0" extendlastcol="F" merge_option="0" merge_option_fixedcolumn="0" merge_option_fixedrow="0" showspreadsheet="T" selectionmode="12" sortoption="0" treeview="T" treeColumn="0" textalignment="10" textalignment_fixed="10"/>
+  <columns>
+    <column name="null" datafield="" visible="T" editable="T" colindex="0" autowidth="T" width="61" datatype="5" textalign="4" textalign_fixed="4" formatstring="" merge="F" style="null" enablefilter="T" header="null"/>
+    <column name="null" datafield="" visible="T" editable="T" colindex="1" autowidth="T" width="61" datatype="5" textalign="4" textalign_fixed="4" formatstring="" merge="F" style="null" enablefilter="T" header="null"/>
+    <column name="null" datafield="" visible="T" editable="T" colindex="2" autowidth="T" width="61" datatype="5" textalign="4" textalign_fixed="4" formatstring="" merge="F" style="null" enablefilter="T" header="null"/>
+    <column name="null" datafield="" visible="T" editable="T" colindex="3" autowidth="T" width="61" datatype="5" textalign="4" textalign_fixed="4" formatstring="" merge="F" style="null" enablefilter="T" header="null"/>
+    <column name="null" datafield="" visible="T" editable="T" colindex="4" autowidth="T" width="61" datatype="5" textalign="4" textalign_fixed="4" formatstring="" merge="F" style="null" enablefilter="T" header="null"/>
+    <column name="null" datafield="" visible="T" editable="T" colindex="5" autowidth="T" width="61" datatype="5" textalign="4" textalign_fixed="4" formatstring="" merge="F" style="null" enablefilter="T" header="null"/>
+    <column name="null" datafield="" visible="T" editable="T" colindex="6" autowidth="T" width="61" datatype="5" textalign="4" textalign_fixed="4" formatstring="" merge="F" style="null" enablefilter="T" header="null"/>
+    <column name="null" datafield="" visible="T" editable="T" colindex="7" autowidth="T" width="0" datatype="5" textalign="4" textalign_fixed="4" formatstring="" merge="F" style="null" enablefilter="T" header="null"/>
+    <column name="null" datafield="" visible="T" editable="T" colindex="8" autowidth="T" width="0" datatype="5" textalign="4" textalign_fixed="4" formatstring="" merge="F" style="null" enablefilter="T" header="null"/>
+    <column name="null" datafield="" visible="T" editable="T" colindex="9" autowidth="T" width="0" datatype="5" textalign="4" textalign_fixed="4" formatstring="" merge="F" style="null" enablefilter="T" header="null"/>
+    <column name="null" datafield="" visible="T" editable="T" colindex="10" autowidth="T" width="0" datatype="5" textalign="4" textalign_fixed="4" formatstring="" merge="F" style="null" enablefilter="T" header="null"/>
+    <column name="null" datafield="" visible="T" editable="T" colindex="11" autowidth="T" width="0" datatype="5" textalign="4" textalign_fixed="4" formatstring="" merge="F" style="null" enablefilter="T" header="null"/>
+    <column name="null" datafield="" visible="T" editable="T" colindex="12" autowidth="T" width="0" datatype="5" textalign="4" textalign_fixed="4" formatstring="" merge="F" style="null" enablefilter="T" header="null"/>
+    <column name="null" datafield="" visible="T" editable="T" colindex="13" autowidth="T" width="0" datatype="5" textalign="4" textalign_fixed="4" formatstring="" merge="F" style="null" enablefilter="T" header="null"/>
+    <column name="null" datafield="" visible="T" editable="T" colindex="14" autowidth="T" width="0" datatype="5" textalign="4" textalign_fixed="4" formatstring="" merge="F" style="null" enablefilter="T" header="null"/>
+    <column name="null" datafield="" visible="T" editable="T" colindex="15" autowidth="T" width="0" datatype="5" textalign="4" textalign_fixed="4" formatstring="" merge="F" style="null" enablefilter="T" header="null"/>
+    <column name="null" datafield="" visible="T" editable="T" colindex="16" autowidth="T" width="0" datatype="5" textalign="4" textalign_fixed="4" formatstring="" merge="F" style="null" enablefilter="T" header="null"/>
+    <column name="null" datafield="" visible="T" editable="T" colindex="17" autowidth="T" width="0" datatype="5" textalign="4" textalign_fixed="4" formatstring="" merge="F" style="null" enablefilter="T" header="null"/>
+    <column name="null" datafield="" visible="T" editable="T" colindex="18" autowidth="T" width="0" datatype="5" textalign="4" textalign_fixed="4" formatstring="" merge="F" style="null" enablefilter="T" header="null"/>
+    <column name="null" datafield="" visible="T" editable="T" colindex="19" autowidth="T" width="0" datatype="5" textalign="4" textalign_fixed="4" formatstring="" merge="F" style="null" enablefilter="T" header="null"/>
+    <column name="null" datafield="" visible="T" editable="T" colindex="20" autowidth="T" width="0" datatype="5" textalign="4" textalign_fixed="4" formatstring="" merge="F" style="null" enablefilter="T" header="null"/>
+    <column name="null" datafield="" visible="T" editable="T" colindex="21" autowidth="T" width="0" datatype="5" textalign="4" textalign_fixed="4" formatstring="" merge="F" style="null" enablefilter="T" header="null"/>
+    <column name="null" datafield="" visible="T" editable="T" colindex="22" autowidth="T" width="0" datatype="5" textalign="4" textalign_fixed="4" formatstring="" merge="F" style="null" enablefilter="T" header="null"/>
+    <column name="null" datafield="" visible="T" editable="T" colindex="23" autowidth="T" width="0" datatype="5" textalign="4" textalign_fixed="4" formatstring="" merge="F" style="null" enablefilter="T" header="null"/>
+    <column name="null" datafield="" visible="T" editable="T" colindex="24" autowidth="T" width="0" datatype="5" textalign="4" textalign_fixed="4" formatstring="" merge="F" style="null" enablefilter="T" header="null"/>
+    <column name="null" datafield="" visible="T" editable="T" colindex="25" autowidth="T" width="0" datatype="5" textalign="4" textalign_fixed="4" formatstring="" merge="F" style="null" enablefilter="T" header="null"/>
+    <column name="" datafield="" visible="T" editable="F" colindex="26" autowidth="T" width="0" datatype="5" textalign="4" textalign_fixed="4" formatstring="" merge="F" style="null" enablefilter="T" header="null"/>
+  </columns>
+  <styles>
+    <style name="fixedrow" backcolor1="15066597" backcolor2="15066597" backalpha1="1" backalpha2="1" bordercolor="6710886" borderthickness="1" bt_top="1" bt_bottom="1" bt_left="1" bt_right="1" fontstyle="0" forecolor="0" fontsize="10"/>
+    <style name="fixedcolumn" backcolor1="16317653" backcolor2="15066597" backalpha1="1" backalpha2="1" bordercolor="6710886" borderthickness="1" bt_top="1" bt_bottom="1" bt_left="1" bt_right="1" fontstyle="0" forecolor="0" fontsize="10"/>
+    <style name="subtotal" backcolor1="15527148" backcolor2="15066597" backalpha1="1" backalpha2="1" bordercolor="12566463" borderthickness="1" bt_top="1" bt_bottom="1" bt_left="1" bt_right="1" fontstyle="2" forecolor="0" fontsize="10"/>
+    <style name="normal" backcolor1="16777215" backcolor2="16777215" backalpha1="1" backalpha2="1" bordercolor="12566463" borderthickness="1" bt_top="1" bt_bottom="1" bt_left="1" bt_right="1" fontstyle="0" forecolor="0" fontsize="10"/>
+    <style name="spreadsheet" backcolor1="15527148" backcolor2="15066597" backalpha1="1" backalpha2="1" bordercolor="10066329" borderthickness="1" bt_top="1" bt_bottom="1" bt_left="1" bt_right="1" fontstyle="0" forecolor="0" fontsize="10"/>
+    <style name="filter" backcolor1="16317653" backcolor2="15066597" backalpha1="1" backalpha2="1" bordercolor="12566463" borderthickness="1" bt_top="1" bt_bottom="1" bt_left="1" bt_right="1" fontstyle="2" forecolor="0" fontsize="10"/>
+  </styles>
+</List>
+			</mx:XML>
+		</MecGrid:ResourceXML>
+	</MecGrid:MecGrid>
+</mx:VBox>
+
+</mx:Canvas>

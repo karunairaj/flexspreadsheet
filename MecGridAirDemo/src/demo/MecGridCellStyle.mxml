@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="300" xmlns:ns1="com.mechan.MecGrid.*" creationComplete="initApp()">
+<mx:Script>
+	<![CDATA[
+		import com.mechan.MecGrid.mecGridClasses.CellRange;
+		import mx.collections.ArrayCollection; 
+		import mx.controls.Alert;
+		import com.mechan.MecGrid.mecGridClasses.MecGridEvent;
+		import com.mechan.MecGrid.mecGridClasses.CellOp;
+		import com.mechan.MecGrid.mecGridClasses.MecGridConst;
+		
+		// This feature requires version 1.0.2
+		// CHECK the MecGrid Version By MecGrid.VERSION static variable
+		
+		[Bindable]
+		private var dpBorderThickness:Array = [1, 2, 3, 4, 5];
+		
+		private var countrydata:Array = [
+								  {continent:'Eastern Asia', country:'Korea', city:'Ulsan'},
+								  {continent:'Eastern Asia', country:'Korea', city:'Seoul'},
+								  {continent:'Eastern Asia', country:'Korea', city:'Pusan'},
+								  {continent:'Eastern Asia', country:'China', city:'Beijing'},
+								  {continent:'Eastern Asia', country:'SubTotal', city:'SubTotal'},
+								  {continent:'South-Eastern Asia', country:'Malaysia', city:'Kualalumpur'},
+								  {continent:'Western Asia', country:'Turkey', city:'Istanbul'},
+								  {continent:'Western Asia', country:'Turkey', city:'Antalya'},
+								  {continent:'Southern Asia', country:'India', city:'New Delhi'},
+								  {continent:'Southern Asia', country:'India', city:'Bangalore'},
+								  {continent:'Southern Asia', country:'India', city:'Chennai'},
+								  {continent:'Europe', country:'France', city:'Paris'},
+								  {continent:'Europe', country:'France', city:'La Tronche'},
+								  {continent:'Europe', country:'France', city:'Lyon'},
+								  {continent:'Europe', country:'France', city:'Saintes'},
+								  {continent:'Europe', country:'England', city:'London'},
+								  {continent:'Europe', country:'England', city:'Birmingham'},
+								  {continent:'Europe', country:'Germany', city:'Birlin'},
+								  {continent:'Europe', country:'Germany', city:'Cologne'},
+								  {continent:'Europe', country:'Germany', city:'Mainz'},
+								  {continent:'Europe', country:'Sweden', city:'Solna'},
+								  {continent:'America', country:'USA', city:'New York'},
+								  {continent:'America', country:'USA', city:'California'}];
+		
+		private function initApp():void
+		{
+			mgrid.addEventListener(MecGridEvent.DRAW_COMPLETED, displayGridEvent);
+			mgrid.addEventListener(MecGridEvent.SELECTION_CHANGED, displayGridEvent);
+			mgrid.addEventListener(MecGridEvent.BEGIN_EDIT_CELL, beginEditCellHandler);
+			mgrid.addEventListener(MecGridEvent.CHECK_STATE_CHANGED, beginEditCellHandler);
+			mgrid.addEventListener(MecGridEvent.END_EDIT_CELL, displayGridEvent);
+			mgrid.addEventListener(MecGridEvent.TREE_OPENED, displayGridEvent);
+			mgrid.addEventListener(MecGridEvent.TREE_COLLAPSED, displayGridEvent);
+		} 
+		
+// DOUBLE CLICK CELL EDITING
+		private function beginEditCellHandler(event:MecGridEvent):void
+		{
+			displayGridEvent(event);
+			
+			if (event.edit_colIndex == 5)
+			{
+				mgrid.EditCell(event, CellOp.EDIT_TEXT);
+			}
+			else if (event.edit_colIndex == 6)
+			{
+				mgrid.EditCell(event, CellOp.EDIT_COMBOBOX, ["combo selection 1", "combo selection 2", "combo selection 3"]);
+			}
+		}
+
+// LOAD SAMPLE XML DATA FOR TREE	
+		private function loadDataProvider():void
+		{
+			mgrid.redraw = false;
+			mgrid.SelectionMode = CellOp.SELECTIONMODE_CELL | CellOp.SELECT_MULTI;
+			mgrid.Rows.count = 0;
+			mgrid.Cols.count = 5;
+			
+			mgrid.spreadSheetStyle = true;
+			
+			mgrid.merge_option = MecGridConst.MERGE_PREV;
+			
+			mgrid.AddRow(0, "CONTINENT;COUNTRY;CITY;VALUE1;VALUE2");
+			mgrid.Rows.fixed = 1;
+			
+			mgrid.Cols.item(0).dataField = "continent";
+			mgrid.Cols.item(1).dataField = "country";
+			mgrid.Cols.item(2).dataField = "city";
+			
+			mgrid.Cols.item(0).merge = true;
+			mgrid.Cols.item(1).merge = true;
+			mgrid.Cols.item(2).merge = true;
+			
+			mgrid.Cols.item(3).datatype = CellOp.STATUSBAR;
+			mgrid.Cols.item(4).datatype = CellOp.STATUSBAR;
+			
+			mgrid.addEventListener(MecGridEvent.DATAPROVIDER_UPDATE_FINISHED, refreshRandomValues);
+			mgrid.treeGridData = false;
+			mgrid.dataProvider = countrydata;
+			
+			mgrid.redraw = true;
+		}
+		
+		private function refreshRandomValues(event:MecGridEvent):void
+		{
+			var i:int;
+			
+			// set background and fore color of text
+			mgrid.set_cell(CellOp.STYLE_BACKCOLOR, 1, 0, 0x333333);
+			mgrid.set_cell(CellOp.STYLE_BACKCOLOR, 1, 1, 0x333333);
+			mgrid.set_cell(CellOp.STYLE_BACKCOLOR, 1, 2, 0x333333);
+			mgrid.set_cell(CellOp.STYLE_FORECOLOR, 1, 0, 0xffffff);
+			mgrid.set_cell(CellOp.STYLE_FORECOLOR, 1, 1, 0xffffff);
+			mgrid.set_cell(CellOp.STYLE_FORECOLOR, 1, 2, 0xffffff);
+			
+			mgrid.set_cell(CellOp.STYLE_BACKCOLOR, 9, 0, 0x000066);
+			mgrid.set_cell(CellOp.STYLE_BACKCOLOR, 9, 1, 0x000066);
+			mgrid.set_cell(CellOp.STYLE_BACKCOLOR, 11, 2, 0x000066);
+			mgrid.set_cell(CellOp.STYLE_FORECOLOR, 9, 0, 0xffffff);
+			mgrid.set_cell(CellOp.STYLE_FORECOLOR, 9, 1, 0xffffff);
+			mgrid.set_cell(CellOp.STYLE_FORECOLOR, 11, 2, 0xffffff);
+			
+			for (i=mgrid.Rows.fixed; i < mgrid.Rows.count; i++)
+			{
+				mgrid.set_cell(CellOp.TEXT, i, 3, Math.random() * 100);
+				mgrid.set_cell(CellOp.TEXT, i, 4, Math.random() * 100);
+			}
+			
+			mgrid.Rows.item(5).merge = true
+			
+			mgrid.redraw = true;
+		}
+
+// USER ACTION
+		private function changeSelectionMode(event:Event):void
+		{
+			switch (mgridSelectionMode.selectedValue)
+			{
+			case "Row":
+				mgrid.SelectionMode = CellOp.SELECTIONMODE_ROW | CellOp.SELECT_SINGLE;
+				break;
+			case "Column":
+				mgrid.SelectionMode = CellOp.SELECTIONMODE_CELL | CellOp.SELECT_MULTI;
+				break;
+			} 
+		}
+		
+		
+		private function changeSpreadSheetStyle():void
+		{
+			mgrid.spreadSheetStyle = btnSpreadSheetStyle.selected;
+			mgrid.redraw = true;
+		}
+// MISC
+		private function displayGridEvent(e:MecGridEvent):void
+		{
+			var ndisp:String = "";
+			
+			ndisp = ">> EVENT " + e.type + "\n";
+			
+			switch (e.type)
+			{
+			case MecGridEvent.DRAW_COMPLETED:
+				var strAreaInfo:String = "render {left:" + mgrid.leftColumn + ",top:" + mgrid.topRow + ",right:" + mgrid.rightColumn + ",bottom:" + mgrid.bottomRow + "}"
+				labelVisibleArea.text = strAreaInfo;
+				break;
+			case MecGridEvent.SELECTION_CHANGED:
+				break;
+			}
+			
+			// txtEventInfo.text = ndisp + txtEventInfo.text;
+		}
+		
+		private function changeColorLayout():void
+		{
+			var bgcolor:uint = this.uiBackColor.selectedColor as uint;
+			var outerThickness:int = this.uiOuterBorderThickness.selectedItem as int;
+			var innerThickness:int = this.uiInnerBorderThickness.selectedItem as int;
+			
+			var cr:ArrayCollection = mgrid.SelectedItems;
+			
+			if (cr == null || cr.length == 0)
+			{
+				Alert.show("Please select region by dragging to draw");
+				return;
+			}
+			
+			mgrid.drawRegion(cr, bgcolor, uiForeColor.selectedColor, innerThickness, outerThickness, uiInsideBorderColor.selectedColor, uiOutsideBorderColor.selectedColor);
+		}
+	]]>
+</mx:Script> 
+	<mx:Label x="10" y="10" text="DYNAMIC CELL STYLE" styleName="demoTitle"/>
+	<mx:VBox right="10" left="10" top="50" bottom="10">
+		<mx:HBox width="100%">
+			<mx:CheckBox id="btnSpreadSheetStyle" label="SpreadSheetStyle" click="changeSpreadSheetStyle()" selected="true"/>
+			<mx:RadioButtonGroup id="mgridSelectionMode" change="changeSelectionMode(event)"/>
+			<mx:RadioButton label="SelectRow" groupName="mgridSelectionMode" value="Row"/>
+			<mx:RadioButton label="SelectCell" groupName="mgridSelectionMode" selected="true" value="Column"/>
+			<mx:Button label="Load SampleData" click="loadDataProvider()"/>
+			<mx:Label id="labelVisibleArea"/>
+		</mx:HBox>
+		<mx:HBox width="100%" height="100%">
+			<ns1:MecGrid id="mgrid" width="100%" height="100%"/>
+			<mx:VBox width="200">
+				<mx:TextInput width="100%" fontWeight="bold" text="Control Panel" textDecoration="underline" fontStyle="italic" borderStyle="inset" cornerRadius="2" borderColor="#D1DDE6" backgroundColor="#F6DBDB"/>
+				<mx:Canvas width="200" height="100%">
+					<mx:Label x="10" y="10" text="Background Color"/>
+					<mx:ColorPicker id="uiBackColor" x="121" y="10" selectedColor="#95FAAD"/>
+					<mx:Label x="10" y="44" text="Foreground Color"/>
+					<mx:ColorPicker x="121" y="40" id="uiForeColor" selectedColor="#FE0202"/>
+					<mx:Label x="10" y="77" text="- Outline border"/>
+					<mx:ComboBox id="uiOuterBorderThickness" x="103" y="92" width="53" dataProvider="{dpBorderThickness}"></mx:ComboBox>
+					<mx:ColorPicker x="103" y="116" id="uiOutsideBorderColor" selectedColor="#A6A6FE"/>
+					<mx:Label x="10" y="150" text="- Inside border"/>
+					<mx:ComboBox id="uiInnerBorderThickness" x="103" y="174" width="53" dataProvider="{dpBorderThickness}"></mx:ComboBox>
+					<mx:ColorPicker x="103" y="200" id="uiInsideBorderColor" selectedColor="#A6A6FE"/>
+					<mx:Button x="10" y="248" label="Apply" click="changeColorLayout()"/>
+					<mx:Label x="42" y="94" text="Thickness"/>
+					<mx:Label x="67" y="120" text="Color"/>
+					<mx:Label x="42" y="176" text="Thickness"/>
+					<mx:Label x="67" y="202" text="Color"/>
+				</mx:Canvas>
+			</mx:VBox>
+		</mx:HBox>
+	</mx:VBox>
+</mx:Canvas>

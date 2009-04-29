@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="300" xmlns:MecGrid="com.mechan.MecGrid.*" creationComplete="applyDataProvider()">
+<mx:Script>
+	<![CDATA[
+		import mx.collections.ArrayCollection;
+		import mx.controls.Alert;
+		
+		[Bindable]
+		private var mdata:ArrayCollection;
+		
+		private var dp:Array = [{selected:false, country:'Korea', city:'Ulsan', qt1:0, qt2:0, qt3:0, qt4:0, avg:''},
+								{selected:false, country:'Korea', city:'Seoul', qt1:0, qt2:0, qt3:0, qt4:0, avg:''},
+								{selected:false, country:'Korea', city:'Pusan', qt1:0, qt2:0, qt3:0, qt4:0, avg:''},
+								{selected:false, country:'England', city:'London', qt1:0, qt2:0, qt3:0, qt4:0, avg:''},
+								{selected:false, country:'France', city:'Paris', qt1:0, qt2:0, qt3:0, qt4:0, avg:''}]
+		
+		private function applyDataProvider():void
+		{
+			var i:int;
+			var n:int = 0;
+			
+			// make row data for testing (50 count more)
+			for (i=0; i < 50; i++)
+			{
+				var obj:Object = new Object();
+				obj.selected = false;
+				obj.country = "country " + i;
+				obj.city = "city " + i;
+				obj.qt1 = 0;
+				obj.qt2 = 0;
+				obj.qt3 = 0;
+				obj.qt4 = 0;
+				obj.avg = "";
+				dp.push(obj);
+			}
+			
+			for (i=0; i < dp.length; i++)
+			{
+				dp[i].qt1 = Math.random() * 1000;
+				dp[i].qt2 = Math.random() * 1000;
+				dp[i].qt3 = Math.random() * 1000;
+				dp[i].qt4 = Math.random() * 1000;
+				n = i + mgrid.Rows.fixed;
+				dp[i].avg = "=(D" + n + " + E" + n + " + F" + n + " + G" + n + ") / 4";
+			}
+			
+			// mgrid.dataProvider = dp;
+			mdata = new ArrayCollection(dp);
+		}
+		
+		private function fixCellHandler(cmd:String):void
+		{
+			mgrid.redraw = false;
+			
+			switch (cmd)
+			{
+			case "frozen":
+				if (mgrid.Rows.frozen_end > 0 || mgrid.Cols.frozen_end > 0)
+				{
+					mgrid.redraw = true;
+					Alert.show("Already frozed at row(" + mgrid.Rows.frozen_end + "), col(" + mgrid.Cols.frozen_end + ").\nUnFroze Cell first then try again.");
+					return;
+				}
+				var r:int = mgrid.topRow;
+				var c:int = mgrid.leftColumn;
+				mgrid.Rows.frozen_start = r;
+				if (mgrid.SelectedItems && mgrid.SelectedItems.length > 0)
+				{
+					mgrid.Rows.frozen_end = mgrid.SelectedItems[0].rowIndex;
+					mgrid.Cols.frozen_end = mgrid.SelectedItems[0].colIndex;
+				}
+				else
+				{
+					mgrid.Rows.frozen_end = r;
+					mgrid.Cols.frozen_end = c;
+				}
+				
+				break;
+			case "unfrozen":
+				mgrid.Rows.frozen_start = 0;
+				mgrid.Rows.frozen_end = 0;
+				mgrid.Cols.frozen_start = 0;
+				mgrid.Cols.frozen_end = 0;
+				break;
+			}
+			
+			// call for horizontal or vertical scroll size is changed
+			mgrid.initSizeVariables(2);
+			
+			mgrid.redraw = true;
+		}
+	]]>
+</mx:Script>
+	<mx:Label x="10" y="10" text="FREEZE ROW AND COLUMN" styleName="demoTitle"/>
+	<mx:VBox left="10" right="10" top="40" bottom="10">
+		<mx:HBox width="100%">
+			<mx:Button label="Froze Current Cell" click="fixCellHandler('frozen')"/>
+			<mx:Button label="Un Froze" click="fixCellHandler('unfrozen')"/>
+		</mx:HBox>
+		<MecGrid:MecGrid id="mgrid" width="100%" height="100%" dataProvider="{mdata}">
+			<MecGrid:ResourceString>
+		eNrF1clu2zAQBuBjgT4FQV0auKhNLY4DWQUSBz31UjTI1WCtsURAIl1yvOR9+qClRC+QExrqwc3F
+		0lCj4f8JMPjhz/S7MPj1IyFTtUKhJFmoymR0QslS7CDXamurcF+5ZyNKatAFzN0bGY27C/ND77qW
+		r7rnh7HtVFPa+SsNPDclAGb0ya5BBYumtVY5ZJQ1bUrjYTNGCWqAjYBt294Us9NeCDvklShkDdLO
+		G5+tuO0zmtBhi3YpTXN/rIjktd3YFnM7MOfIlwIq+5JLBjklG2HErwraAJAL5G3xjTZfT8gcdm0W
+		vka1FTmWbd/+LmZuJr6soJu4SXWqDkmZbVkqXXM0qIUsMkpJaT8Y6Iz+bAOl7uJEbylYR7FQa4n6
+		pReCeRDjDiLpIOJ/RMxcnnR/9TPCLkNgP0P4Pww2TNr8+NNHnfS/kfUKH3nCTyb+8GzUK33wOQiC
+		L0FwUjzbPKi0SZlB8mPNETT5dH/jN8VnprCXKfaY7sJrmkKZH00PF0zJmSnqZUp8ptE1TZE+mWYX
+		TOMzU9zLNH4XU4zl0fR4wXTbMfFN0ct06zGxJLoC6n4DmhdAMvs3GjwMZoPHGzIkcepZ359Jw+Oh
+		NB22p/NfW+95aQ==
+			</MecGrid:ResourceString>
+		</MecGrid:MecGrid>		
+	</mx:VBox>
+</mx:Canvas>
