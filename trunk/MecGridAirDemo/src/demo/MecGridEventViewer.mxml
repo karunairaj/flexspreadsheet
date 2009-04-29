@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="300" xmlns:ns1="com.mechan.MecGrid.*" creationComplete="initApp()">
+<mx:Script>
+	<![CDATA[
+		import com.mechan.MecGrid.mecGridClasses.SelectedItem; 
+		import mx.controls.Alert;
+		import com.mechan.MecGrid.mecGridClasses.MecGridEvent;
+		import com.mechan.MecGrid.mecGridClasses.CellOp;
+		import com.mechan.MecGrid.mecGridClasses.MecGridConst;
+		
+		private function initApp():void
+		{
+			mgrid.addEventListener(MecGridEvent.DRAW_COMPLETED, displayGridEvent);
+			mgrid.addEventListener(MecGridEvent.SELECTION_CHANGED, displayGridEvent);
+			mgrid.addEventListener(MecGridEvent.BEGIN_EDIT_CELL, beginEditCellHandler);
+			mgrid.addEventListener(MecGridEvent.CHECK_STATE_CHANGED, beginEditCellHandler);
+			mgrid.addEventListener(MecGridEvent.END_EDIT_CELL, displayGridEvent);
+			mgrid.addEventListener(MecGridEvent.TREE_OPENED, displayGridEvent);
+			mgrid.addEventListener(MecGridEvent.TREE_COLLAPSED, displayGridEvent);
+		} 
+		
+// DOUBLE CLICK CELL EDITING
+		private function beginEditCellHandler(event:MecGridEvent):void
+		{
+			displayGridEvent(event);
+			
+			if (event.edit_colIndex == 5)
+			{
+				mgrid.EditCell(event, CellOp.EDIT_TEXT);
+			}
+			else if (event.edit_colIndex == 6)
+			{
+				mgrid.EditCell(event, CellOp.EDIT_COMBOBOX, ["combo selection 1", "combo selection 2", "combo selection 3"]);
+			}
+		}
+
+// POPULATE SAMPLE DATA (LIST)
+		private function populateGridData():void
+		{
+			mgrid.merge_option = MecGridConst.MERGE_FIXED;
+			mgrid.Cols.defaultwidth = 80;
+			mgrid.Rows.defaultheight = 18;
+			
+			mgrid.editable = true;
+			mgrid.redraw = false;
+			
+			// clear all resources
+			mgrid.Rows.count = 0;
+			mgrid.Cols.count = 0;
+			
+			mgrid.spreadSheetStyle = true;
+			
+			mgrid.Rows.count = nrow.value;
+			mgrid.Cols.count = ncolumn.value;
+			mgrid.Rows.fixed = 2;
+			
+			var i:int;
+			var j:int;
+			
+			mgrid.AddColumn(0);
+			
+			mgrid.AddRow(0, "No.;Browser;Visits;Visits;Visits;Visits;Bounce Rates;Pageviews;Pageviews;PageViews");
+			mgrid.AddRow(1, "No.;Browser;Visits;%visits;New Visitors;Unique Visitors;Bounce Rates;Pageviews;Average;Time on site");
+			
+			for (i=mgrid.Rows.fixed; i < mgrid.Rows.count; i++)
+			{
+				for (j=0; j < mgrid.Cols.count; j++)
+				{
+					if (j == 0)
+					{
+						mgrid.set_cell(CellOp.TEXT, i, j, i);
+					}
+					else
+					{
+						mgrid.set_cell(CellOp.TEXT, i, j, "r" + i + ",c" + j);
+					}
+				}
+			}
+			
+			mgrid.set_cell(CellOp.TEXTALIGN, 0, 7, CellOp.TEXTALIGN_LEFT_TOP);
+			
+			mgrid.Cols.item(3).autowidth = false;
+			mgrid.Cols.item(3).width = 100;
+			mgrid.Cols.item(3).datatype = CellOp.STATUSBAR;
+			
+			for (i=mgrid.Rows.fixed; i < mgrid.Rows.count; i++)
+			{
+				mgrid.set_cell(CellOp.TEXT, i, 3, Math.random() * 100);
+			}
+			
+			mgrid.Cols.item(4).autowidth = true;
+			mgrid.Cols.item(4).textalign = CellOp.TEXTALIGN_CENTER_CENTER;
+			mgrid.Cols.item(4).datatype = CellOp.TEXT;
+			
+			mgrid.Cols.item(5).editable = true;
+			mgrid.Cols.item(6).editable = true;
+			mgrid.Cols.item(7).editable = false;
+			mgrid.Cols.item(8).editable = false;
+			
+			mgrid.Cols.item(7).datatype = CellOp.BOOLEAN;
+			mgrid.Cols.item(7).textalign = CellOp.TEXTALIGN_CENTER_CENTER;
+			mgrid.Cols.item(8).datatype = CellOp.TEXT;
+			mgrid.Cols.item(8).textalign = CellOp.TEXTALIGN_LEFT_CENTER;
+			
+			mgrid.SelectionMode = CellOp.SELECTIONMODE_ROW;
+			
+			mgrid.redraw = true;
+		}
+
+// USER ACTION
+		private function changeSpreadSheetStyle():void
+		{
+			mgrid.spreadSheetStyle = btnSpreadSheetStyle.selected;
+			mgrid.redraw = true;
+		}
+// MISC
+		private function displayGridEvent(e:MecGridEvent):void
+		{
+			var ndisp:String = "";
+			
+			ndisp = ">> EVENT " + e.type + "\n";
+			
+			switch (e.type)
+			{
+			case MecGridEvent.DRAW_COMPLETED:
+				var strAreaInfo:String = "render {left:" + mgrid.leftColumn + ",top:" + mgrid.topRow + ",right:" + mgrid.rightColumn + ",bottom:" + mgrid.bottomRow + "}"
+				labelVisibleArea.text = strAreaInfo;
+				break;
+			case MecGridEvent.SELECTION_CHANGED:
+				var sel:SelectedItem = mgrid.SelectedItems[0];
+				
+				var strSelInfo:String = "merge_col: " + sel.cell.mergetype_column + ", merge_row: " + sel.cell.mergetype_row;
+				ndisp += strSelInfo + "\n"; 
+				break;
+			}
+			
+			txtEventInfo.text = ndisp + txtEventInfo.text;
+		}
+	]]>
+</mx:Script> 
+	<mx:Label x="10" y="10" text="Event Viewer" styleName="demoTitle"/>
+	<mx:VBox left="10" right="10" top="40" bottom="10">
+		<mx:VBox width="100%">
+			<mx:HBox width="100%">
+				<mx:Label text="Rows"/>
+				<mx:NumericStepper id="nrow" minimum="10" maximum="1000000" value="40"/>
+				<mx:Label text="Columns"/>
+				<mx:NumericStepper id="ncolumn" minimum="10" maximum="1000000" value="20"/>
+				<mx:Button label="Populate Data" click="populateGridData()"/>
+			</mx:HBox>
+			<mx:HBox width="100%">
+				<mx:CheckBox id="btnSpreadSheetStyle" label="SpreadSheetStyle" click="changeSpreadSheetStyle()" selected="true"/>
+				<mx:Label id="labelVisibleArea"/>
+			</mx:HBox>
+		</mx:VBox>
+		<mx:HBox width="100%" height="100%">
+			<ns1:MecGrid id="mgrid" width="100%" height="100%"/>
+			<mx:VBox width="200" height="100%">
+				<mx:TextInput width="100%" fontWeight="bold" text="Event Information" textDecoration="underline" fontStyle="italic" borderStyle="inset" cornerRadius="2" borderColor="#D1DDE6" backgroundColor="#F6DBDB"/>
+				<mx:TextArea id="txtEventInfo" width="100%" height="100%"/>
+			</mx:VBox>
+		</mx:HBox>
+	</mx:VBox>
+</mx:Canvas>

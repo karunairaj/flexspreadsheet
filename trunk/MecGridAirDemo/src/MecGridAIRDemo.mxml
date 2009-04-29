@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" 
+	layout="vertical" xmlns:head="layout.*" creationComplete="init()"
+    width="800" height="700" 
+	xmlns:MecGrid="com.mechan.MecGrid.*" xmlns:demo="demo.*">
+<mx:Script>
+	<![CDATA[
+		import mx.collections.XMLListCollection;
+		import mx.collections.ArrayCollection;
+		import mx.core.Container;
+// fast index
+//** tree navigator
+
+		import mx.events.CloseEvent;
+		import mx.managers.PopUpManager;
+		import flash.utils.ByteArray;
+		import mx.controls.Alert;
+		import mx.utils.Base64Decoder;
+		import mx.utils.Base64Encoder;
+		
+		import com.mechan.MecGrid.*;
+		import com.mechan.MecGrid.mecGridClasses.*;
+		
+		[Bindable]
+		[Embed(source="/assets/export.png")]
+		public var exportIcon:Class;
+		
+		[Embed(source="/assets/backgrounds.swf#bluestripe")]
+		public var bluestripe:Class;
+		
+		[Embed(source="/assets/brushedMetal.jpg")]
+		public var brushedmetal:Class;
+		
+		[Embed(source="/assets/backgrounds.swf#greenstripe")]
+		public var greenstripe:Class;
+		
+		[Embed(source="/assets/backgrounds.swf#industrial")]
+		public var industrial:Class;
+		
+		[Embed(source="/assets/backgrounds.swf#redstripe")]
+		public var redstripe:Class;
+		
+		[Embed(source="/assets/backgrounds.swf#retroFifties")]
+		public var retroFifties:Class;
+		
+		[Embed(source="/assets/backgrounds.swf#tartan")]
+		public var tartan:Class;
+		
+		[Bindable]
+		[Embed(source="/assets/disclose_close.png")]
+		public var arrowSide:Class;
+		
+		[Bindable]
+		[Embed(source="/assets/disclose_open.png")]
+		public var arrowDown:Class;
+		
+		public var cssbackgroundColor:String = "";
+		public var cssbackgroundImage:String = "";
+		public var cssthemeColor:String = "";
+		public var csscolor:String = "";
+		public var cssbackgroundGradientColors:String = "";
+		public var cssbackgroundGradientAlphas:String = "";
+		public var cssbackgroundSize:String = "";
+		
+		[Bindable]
+		private var treeNav:XMLListCollection; 
+
+		public function init():void
+		{
+		    var bgImage:Array = [{label:"None"},
+		                        {label:"bluestripe", data:bluestripe},
+		                        {label:"redstripe", data:redstripe},
+		                        {label:"greenstripe", data:greenstripe},
+		                        {label:"brushedmetal", data:brushedmetal},
+		                        {label:"industrial", data:industrial},
+		                        {label:"retroFifties", data:retroFifties},
+		                        {label:"tartan", data:tartan}];
+		    
+		    mybackgroundImageapplication.dataProvider = bgImage;
+		    mybackgroundImageapplication.selectedIndex = 6;
+		    StyleManager.getStyleDeclaration("WindowedApplication").setStyle("backgroundImage", retroFifties);
+		    mybackgroundImageapplication.addEventListener("change", changeBackgroundImage);
+		    
+		    uiVersion.text = MecGrid.VERSION;
+		    
+		    treeNav = new XMLListCollection(treeNavData);
+		}
+
+		public function changeBackgroundImage(e:Event):void 
+		{
+		    StyleManager.getStyleDeclaration("WindowedApplication").setStyle('backgroundImage', mybackgroundImageapplication.selectedItem.data);
+		}
+		
+//** tree navigator
+		private function treeNavItemClickHandler(event:MecGridEvent):void
+		{
+			var renderer:CellRenderer = event.renderer;
+			
+			if (renderer && renderer.celldata)
+			{
+				var row:DimInfo = mgrid_menu.Rows.item(renderer.rowIndex);
+				
+				if (row.IsTreeNode == true && row.treenode.node_level == 1)
+				{
+					var page:String = row.data.@page.toString();
+					
+					if (page != "" && vprop.getChildByName(page))
+						vprop.selectedChild = vprop.getChildByName(page) as Container;
+					
+					if (vprop.selectedChild && vprop.selectedChild.hasOwnProperty("mgrid"))
+						btnExportExcel.visible = true;
+					else
+						btnExportExcel.visible = false;
+				}
+			}
+		}
+		
+		private function changeTreeNavUIStyles(event:MecGridEvent):void
+		{
+			var i:int;
+			var c:Cell;
+			
+			var hcs:CellStyle = mgrid_menu.gridCellStyle["titlerow"];
+			
+			for (i=0; i < mgrid_menu.Rows.count - 1; i++)
+			{
+				var row:DimInfo = mgrid_menu.Rows.item(i);
+				
+				if (row.visible == true)
+				{
+					c = mgrid_menu.get_cell(CellOp.GET_CELLINFO, i, 0) as Cell;
+					
+					if (row.IsTreeNode == true && row.treenode.node_level == 0)
+					{
+						if (c.cell_style.stylename != "titlerow")
+						{
+							if (mgrid_menu.redraw == true)
+								mgrid_menu.redraw = false;
+								
+							c.cell_style = hcs;
+							mgrid_menu.get_cell(CellOp.GET_CELLINFO, i, 1).cell_style = hcs;
+						}
+					}
+				}
+			}
+			
+			if (mgrid_menu.redraw == false)
+			{
+				mgrid_menu.redraw = true;
+			}
+		}
+		
+		private function exportToExcelFile():void
+		{
+			if (vprop.selectedChild && vprop.selectedChild.hasOwnProperty("mgrid"))
+			{
+				var mgrid:MecGrid = Object(vprop.selectedChild).mgrid;
+				
+				if (mgrid)
+				{
+					var f:File = new File();
+					f.addEventListener(Event.SELECT, exportFileSelectedHandler);
+					f.addEventListener(IOErrorEvent.IO_ERROR, exportErrorHandler);
+					f.addEventListener(SecurityErrorEvent.SECURITY_ERROR, exportErrorHandler);
+					f.browseForSave("Save to Excel File");
+				}
+			}
+		}
+		
+		private function exportErrorHandler(event:IOErrorEvent):void
+		{
+			Alert.show("Error while saving Excel file!");
+		}
+		
+		private function exportFileSelectedHandler(event:Event):void
+		{
+			var mgrid:MecGrid = Object(vprop.selectedChild).mgrid;
+			var bt:ByteArray = mgrid.ExportToExel("Sheet1");
+			
+			try
+			{
+				if (bt == null)
+				{
+					Alert.show("Grid is empty or error while get cell data");
+					return;
+				}
+				
+				var f:File = event.target as File;
+				var fs:FileStream = new FileStream();
+				fs.open(f, FileMode.WRITE);
+				fs.writeBytes(bt);
+				fs.close();
+			}
+			catch (e:Error)
+			{
+				Alert.show(e.message);
+			}
+		}
+	]]>
+</mx:Script>
+<mx:Style source="css/MecStyle.css" />
+<mx:XMLList id="treeNavData">
+    <node category="DataGrid Features" item="DataGrid Features" blank=" ">
+    	<node item="Large data" page="demo_largedata" desc="Large data with small memory footprint and fast drawing."/>
+    	<node item="Data Filtering" page="demo_datafilter" desc="Data Filtering with various column data type."/>
+    	<node item="Tree View" page="demo_treeview"/>
+    	<node item="Event Viewer" page="demo_event"/>
+    	<node item="Sorting" page="demo_sorting"/>
+    	<node item="Drag &amp; Drop" page="demo_dragdrop"/>
+    	<node item="Clipboard Copy" page="demo_clipboard" desc="Data Filtering with various column data type."/>    
+    </node>
+    <node category="OLAP Analysis" item="OLAP Analysis" blank=" ">
+    	<node item="Pivoting" page="demo_olappivoting"/>
+    </node>
+    <node category="SPREADSHEET" item="SPREADSHEET" blank=" ">
+    	<node item="SpreadSheet Indexing" page="demo_spreadsheet"/>
+    	<node item="Calculator" page="demo_formula"/>
+    </node>
+    <node category="SUMMARY" item="SUMMARY" blank=" ">
+    	<node item="Sub totals" page="demo_subtotal"/>
+    	<node item="Grand totals" page="demo_grandtotal"/>
+    </node>
+    <node category="Sample Report" item="Sample Report" blank=" ">
+    	<node item="Freeze Row &amp; Column" page="demo_freeze"/>
+    	<node item="Cell Style" page="demo_cellstyle"/>
+    	<node item="Editing Cell" page="demo_editing"/>
+    </node>
+    <node category="Entertainment" item="Entertainment" blank=" ">
+    	<node item="Grid MineSweep" page="demo_minesweep"/>
+    </node>
+    <node category="Map" item="Map" blank=" ">
+    	<node item="Korea" page="demo_map_korea"/>
+    </node>
+</mx:XMLList>
+
+<mx:VBox horizontalAlign="left" width="100%" verticalGap="5">
+    <mx:HBox verticalAlign="middle" width="100%">
+        <mx:Image source="@Embed('assets/fseLogo.png')" />
+        <mx:Label text="MecGrid DEMO" styleName="styleExplorerTitle">
+            <mx:filters>
+                  <flash.filters:DropShadowFilter xmlns:flash.filters="flash.filters.*" angle="90" blurX="5" blurY="5"
+                       distance="2" alpha=".3" color="0x000000" />
+              </mx:filters>
+        </mx:Label>
+        <mx:Box height="20" verticalAlign="bottom" >
+            <mx:Label id="uiVersion" text="" fontFamily="Myriad" color="#FFFFFF" fontSize="8" />    
+        </mx:Box>
+        <mx:Box width="100%" horizontalAlign="right" verticalAlign="bottom">
+        	<mx:ComboBox id="mybackgroundImageapplication"/>
+        </mx:Box>
+    </mx:HBox>    
+</mx:VBox>
+<mx:HDividedBox width="100%" height="100%">
+    <mx:Canvas width="180" height="100%" id="box1">
+        <mx:Box width="100%" height="100%" styleName="fseControlBar" />
+        <mx:Box width="100%" height="100%" styleName="fseControlBar" backgroundAlpha="1" >
+            <mx:filters>
+                  <flash.filters:BevelFilter xmlns:flash.filters="flash.filters.*" angle="90" blurX="1" blurY="1"
+                       distance="1" highlightAlpha=".4" shadowAlpha=".4" highlightColor="0x000000" shadowColor="0xFFFFFF" knockout="true" />
+              </mx:filters>
+        </mx:Box>
+    <!-- 
+    //********************//
+    //   STYLE CONTROLS   //
+    //********************//
+    -->
+   <mx:VBox width="100%" height="100%">
+		<head:GlassHeaders headerTitle="FEATURES"/>
+    
+		<mx:Canvas width="100%" height="100%" verticalScrollBarStyleName="fseVerticalScrollBar"
+                horizontalScrollPolicy="off" label="Accordion">
+                
+            <mx:Box width="100%" height="100%" paddingBottom="3" paddingLeft="3" paddingRight="3" borderStyle="none">
+            	<MecGrid:MecGrid id="mgrid_menu" width="100%" height="100%" dataProvider="{treeNav}" borderStyle="none" itemClicked="treeNavItemClickHandler(event)" drawCompleted="changeTreeNavUIStyles(event)">
+					<MecGrid:ResourceXML>
+						<mx:XML xmlns="">
+<List>
+  <option cols="2" fixedrows="0" fixedcols="0" extendlastcol="false" merge_option="0" merge_option_fixedcolumn="0" merge_option_fixedrow="0" showspreadsheet="F" selectionmode="17" sortoption="0" treeview="T" treeColumn="0" textalignment="10" textalignment_fixed="10"/>
+  <columns>
+    <column name="col_0" datafield="@blank" visible="T" editable="F" colindex="0" autowidth="F" width="25" datatype="5" textalign="4" textalign_fixed="4" formatstring="" merge="F" style="ImageColumn" enablefilter="T" header="null"/>
+    <column name="col_1" datafield="@item" visible="T" editable="F" colindex="1" autowidth="T" width="61" datatype="5" textalign="4" textalign_fixed="4" formatstring="" merge="F" style="" enablefilter="T" header="null"/>
+  </columns>
+  <styles>
+    <style name="ImageColumn" backcolor1="13260" backcolor2="16777215" backalpha1="0.5" backalpha2="0.2" bordercolor="12566463" borderthickness="0" bt_top="0" bt_bottom="0" bt_left="0" bt_right="0" fontstyle="0" forecolor="0" fontsize="10"/>
+    <style name="titlerow" backcolor1="16764057" backcolor2="16777215" backalpha1="0.4" backalpha2="0.4" bordercolor="12566463" borderthickness="0" bt_top="0" bt_bottom="0" bt_left="0" bt_right="0" fontstyle="1" forecolor="0" fontsize="10"/>
+    <style name="normal" backcolor1="16777215" backcolor2="16777215" backalpha1="0.4" backalpha2="0.4" bordercolor="12566463" borderthickness="0" bt_top="0" bt_bottom="0" bt_left="0" bt_right="0" fontstyle="0" forecolor="0" fontsize="10"/>
+    <style name="filter" backcolor1="16317653" backcolor2="15066597" backalpha1="1" backalpha2="1" bordercolor="12566463" borderthickness="1" bt_top="1" bt_bottom="1" bt_left="1" bt_right="1" fontstyle="2" forecolor="0" fontsize="10"/>
+    <style name="spreadsheet" backcolor1="16317653" backcolor2="15066597" backalpha1="1" backalpha2="1" bordercolor="6710886" borderthickness="1" bt_top="1" bt_bottom="1" bt_left="1" bt_right="1" fontstyle="0" forecolor="0" fontsize="10"/>
+    <style name="subtotal" backcolor1="16317653" backcolor2="15066597" backalpha1="1" backalpha2="1" bordercolor="12566463" borderthickness="1" bt_top="1" bt_bottom="1" bt_left="1" bt_right="1" fontstyle="2" forecolor="0" fontsize="10"/>
+    <style name="fixedrow" backcolor1="15066597" backcolor2="15066597" backalpha1="1" backalpha2="1" bordercolor="6710886" borderthickness="1" bt_top="1" bt_bottom="1" bt_left="1" bt_right="1" fontstyle="0" forecolor="0" fontsize="10"/>
+    <style name="fixedcolumn" backcolor1="16317653" backcolor2="15066597" backalpha1="1" backalpha2="1" bordercolor="6710886" borderthickness="1" bt_top="1" bt_bottom="1" bt_left="1" bt_right="1" fontstyle="0" forecolor="0" fontsize="10"/>
+  </styles>
+</List>
+						</mx:XML>
+					</MecGrid:ResourceXML>
+            	</MecGrid:MecGrid>
+            </mx:Box>
+       	</mx:Canvas>
+   </mx:VBox>
+    </mx:Canvas>
+
+	<mx:VBox height="100%" width="100%" paddingLeft="10" paddingRight="10"  >
+	
+	    <mx:VBox height="100%" width="100%" styleName="glassPods">
+	    	<mx:HBox width="100%" horizontalGap="0">
+	    		<head:GlassHeaders headerTitle="EXAMPLES"/>
+	    		<mx:Button id="btnExportExcel" label="Save as Excel" icon="@Embed('assets/excel_export.gif')" visible="false" click="exportToExcelFile()"/>
+	    	</mx:HBox>
+	    <!-- 
+	    //********************//
+	    //   SANDBOX          //
+	    //********************//
+	    -->
+	        <mx:ViewStack id="vprop" width="100%" height="100%">
+	        	<mx:Canvas width="100%" height="100%"/>
+	        	<demo:MecGridSubTotal name="demo_subtotal" width="100%" height="100%"/>
+	        	<demo:MecGridMineSweep name="demo_minesweep" width="100%" height="100%"/>
+	        	<demo:MecGridLargeData name="demo_largedata" width="100%" height="100%"/>
+	        	<demo:MecGridFiltering name="demo_datafilter" width="100%" height="100%"/>
+	        	<demo:MecGridForOLAP name="demo_olappivoting" width="100%" height="100%"/>
+	        	<demo:MecGridGrandTotal name="demo_grandtotal" width="100%" height="100%"/>
+	        	<demo:MecGridTreeView name="demo_treeview" width="100%" height="100%"/>
+	        	<demo:MecGridDragDrop name="demo_dragdrop" width="100%" height="100%"/>
+	        	<demo:MecMapKorea name="demo_map_korea" width="100%" height="100%"/>
+	        	<demo:MecGridSorting name="demo_sorting" width="100%" height="100%"/>
+	        	<demo:MecGridEventViewer name="demo_event" width="100%" height="100%"/>
+	        	<demo:MecGridClipboard name="demo_clipboard" width="100%" height="100%"/>
+	        	<demo:MecGridFreeze name="demo_freeze" width="100%" height="100%"/>
+	        	<demo:MecGridCellStyle name="demo_cellstyle" width="100%" height="100%"/>
+	        	<demo:MecGridFormula name="demo_formula" width="100%" height="100%"/>
+	        	<demo:MecGridSpreadSheet name="demo_spreadsheet" width="100%" height="100%"/>
+	        </mx:ViewStack>
+	    </mx:VBox>
+	</mx:VBox>
+
+</mx:HDividedBox>
+
+<mx:HBox width="100%" height="26">
+    <mx:LinkButton label="Copyright (c) 2008 MECHAN. All Rights Reserved" 
+        click="navigateToURL(new URLRequest('http://code.google.com/p/flexspreadsheet/'));"
+        styleName="footerLink" alpha="0.2"
+        />
+    <mx:Spacer width="100%" />
+    <mx:LinkButton label="Created by MECHAN" 
+        click="navigateToURL(new URLRequest('mailto:mechan93@gmail.com'));"
+        styleName="footerLink"
+        textDecoration="underline" alpha="0.2"
+        />
+</mx:HBox>
+</mx:WindowedApplication>

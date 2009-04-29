@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="300" xmlns:ns1="com.mechan.MecGrid.*" creationComplete="initApp()">
+<mx:Script>
+	<![CDATA[
+		import com.mechan.MecGrid.mecGridClasses.Cell;
+		import mx.core.IFlexDisplayObject;
+		import com.mechan.utils.Format;
+		import mx.collections.ArrayCollection;
+		import com.mechan.MecGrid.mecGridClasses.CellRange;
+		import com.mechan.MecGrid.mecGridClasses.SelectedItem; 
+		import com.mechan.MecGrid.mecGridClasses.FontStyleEnum;
+		import mx.controls.Alert;
+		import com.mechan.MecGrid.mecGridClasses.MecGridEvent;
+		import com.mechan.MecGrid.mecGridClasses.CellOp;
+		import com.mechan.MecGrid.mecGridClasses.MecGridConst;
+		import mx.managers.PopUpManager;
+		
+		private function initApp():void
+		{
+			mgrid.addEventListener(MecGridEvent.BEGIN_EDIT_CELL, beginEditCellHandler);
+			
+			Alert.show("To start, click Populate Data button.");
+		} 
+		
+// DOUBLE CLICK CELL EDITING
+		private var _editing_row:int = -1;
+		private var _editing_col:int = -1;
+		
+		private function beginEditCellHandler(event:MecGridEvent):void
+		{
+			txtFormula.text = m_text;
+			
+			_editing_row = -1;
+			_editing_col = -1;
+			
+			if (event.edit_colIndex == 6)
+			{
+				mgrid.EditCell(event, CellOp.EDIT_COMBOBOX, ["combo selection 1", "combo selection 2", "combo selection 3"]);
+			}
+			else
+			{
+				var m_text:String = mgrid.get_cell(CellOp.TEXT, event.edit_rowIndex, event.edit_colIndex) as String;
+				if (m_text.charAt(0) == "=")
+				{
+					_editing_row = event.edit_rowIndex;
+					_editing_col = event.edit_colIndex;
+					
+					this.txtFormula.text = m_text;
+				}
+				else
+				{
+					mgrid.EditCell(event, CellOp.EDIT_TEXT);
+				}
+			}
+		}
+
+// POPULATE SAMPLE DATA (LIST)
+		private function populateGridData():void
+		{
+			mgrid.merge_option = MecGridConst.MERGE_FIXED;
+			mgrid.Cols.defaultwidth = 80;
+			mgrid.Rows.defaultheight = 18;
+			
+			mgrid.editable = true;
+			mgrid.redraw = false;
+			
+			// clear all resources
+			mgrid.Rows.count = 0;
+			mgrid.Cols.count = 0;
+			
+			mgrid.spreadSheetStyle = true;
+			
+			mgrid.Rows.count = nrow.value;
+			mgrid.Cols.count = 9;
+			mgrid.Rows.fixed = 2;
+			
+			var i:int;
+			var j:int;
+			
+			mgrid.AddRow(0, "Browser;Visits;Visits;Visits;Visits;Bounce Rates;Pageviews;Pageviews;PageViews");
+			mgrid.AddRow(1, "Browser;Visits;%visits;New Visitors(Function);Unique Visitors;Bounce Rates;Pageviews;Average;Time on site");
+			
+			for (i=mgrid.Rows.fixed; i < mgrid.Rows.count; i++)
+			{
+				for (j=0; j < mgrid.Cols.count; j++)
+				{
+					if (j == 0)
+					{
+						mgrid.set_cell(CellOp.TEXT, i, j, "r" + i + ",c" + j);
+					}
+					else if (j == 4)
+					{
+						mgrid.set_cell(CellOp.TEXT, i, j, "=D" + i + "-" + "B" + i);
+					}
+					else
+					{
+						mgrid.set_cell(CellOp.TEXT, i, j, Math.random()*100);
+					}
+				}
+			}
+			
+			for (i=1; i < mgrid.Cols.count; i++)
+			{
+				mgrid.Cols.item(i).textalign = CellOp.TEXTALIGN_RIGHT_CENTER;
+				mgrid.Cols.item(i).formatString = "#,###.##";
+			}
+			
+			mgrid.set_cell(CellOp.TEXTALIGN, 0, 7, CellOp.TEXTALIGN_LEFT_TOP);
+			
+			mgrid.Cols.item(3).autowidth = false;
+			mgrid.Cols.item(3).width = 100;
+			mgrid.Cols.item(3).datatype = CellOp.STATUSBAR;
+			
+			for (i=mgrid.Rows.fixed; i < mgrid.Rows.count; i++)
+			{
+				mgrid.set_cell(CellOp.TEXT, i, 3, Math.random() * 100);
+			}
+			
+			mgrid.Cols.item(4).editable = true;
+			mgrid.Cols.item(5).editable = true;
+			mgrid.Cols.item(6).editable = true;
+			mgrid.Cols.item(7).editable = false;
+			mgrid.Cols.item(8).editable = false;
+			
+			mgrid.Cols.item(7).datatype = CellOp.BOOLEAN;
+			mgrid.Cols.item(7).textalign = CellOp.TEXTALIGN_CENTER_CENTER;
+			mgrid.Cols.item(8).datatype = CellOp.TEXT;
+			mgrid.Cols.item(8).textalign = CellOp.TEXTALIGN_LEFT_CENTER;
+			
+			mgrid.SelectionMode = CellOp.SELECT_MULTI | CellOp.SELECTIONMODE_CELL;
+			
+			mgrid.redraw = true;
+		}
+
+// USER ACTION
+		private function changeSelectionMode(event:Event):void
+		{
+			switch (mgridSelectionMode.selectedValue)
+			{
+			case "Row":
+				mgrid.SelectionMode = CellOp.SELECTIONMODE_ROW | CellOp.SELECT_SINGLE;
+				break;
+			case "Column":
+				mgrid.SelectionMode = CellOp.SELECTIONMODE_CELL | CellOp.SELECT_MULTI;
+				break;
+			} 
+		}
+		
+		
+		private function changeSpreadSheetStyle():void
+		{
+			mgrid.spreadSheetStyle = btnSpreadSheetStyle.selected;
+			mgrid.redraw = true;
+		}
+// MISC
+		
+// toolbar support
+		private function toolbarShowHandler():void
+		{
+			uiToolbar.visible = uiToolbarShow.selected;
+			uiToolbar.includeInLayout = uiToolbarShow.selected;
+		}
+		
+		private function updateGridRangeFont():void
+		{
+			var selcells:ArrayCollection = mgrid.SelectedItems;
+			var m_fontstyle:int = FontStyleEnum.NONE;
+			
+			if (uiFontBold.selected == true)
+			{
+				m_fontstyle |= FontStyleEnum.BOLD;
+			}
+			
+			if (uiFontItalic.selected == true)
+			{
+				m_fontstyle |= FontStyleEnum.ITALIC;
+			}
+			
+			if (uiFontUnderline.selected == true)
+			{
+				m_fontstyle |= FontStyleEnum.UNDERLINE;
+			}
+			
+			if (selcells && selcells.length > 0)
+			{
+				var i:int;
+				
+				for (i=0; i < selcells.length; i++)
+				{
+					var sel:SelectedItem = selcells[i];
+					mgrid.set_cell(CellOp.FONT_STYLE, sel.rowIndex, sel.colIndex, m_fontstyle);
+				}
+			}
+		}
+		
+		private function updateGridRangeAlign(loc:String):void
+		{
+			var m_align:int;
+			
+			switch (loc)
+			{
+			case "left":
+				uiAlignMiddle.selected = false;
+				uiAlignRight.selected = false;
+				m_align = CellOp.TEXTALIGN_LEFT_CENTER;
+				break;
+			case "center":
+				uiAlignLeft.selected = false;
+				uiAlignRight.selected = false;
+				m_align = CellOp.TEXTALIGN_CENTER_CENTER;
+				break;
+			case "right":
+				uiAlignLeft.selected = false;
+				uiAlignRight.selected = false;
+				m_align = CellOp.IMAGE_ALIGN_RIGHT_CENTER;
+				break;
+			}
+			
+			var selcells:ArrayCollection = mgrid.SelectedItems;
+			
+			if (selcells && selcells.length > 0)
+			{
+				var i:int;
+				
+				for (i=0; i < selcells.length; i++)
+				{
+					var sel:SelectedItem = selcells[i];
+					mgrid.set_cell(CellOp.TEXTALIGN, sel.rowIndex, sel.colIndex, m_align);
+				}
+				
+				mgrid.redraw = true;
+			}
+		}
+		
+		private function openColumnOptionWindow():void
+		{
+			var copt:WndColumnProperty = new WndColumnProperty();
+			copt.TargetGrid = mgrid
+			PopUpManager.addPopUp(copt as IFlexDisplayObject, this as DisplayObject, true);
+			PopUpManager.centerPopUp(copt as IFlexDisplayObject);
+			
+			copt.validateNow();
+		}
+		
+		private function formulaKeyDownHandler(event:KeyboardEvent):void
+		{
+			if (this._editing_col > -1 && _editing_row > -1 && event.keyCode == Keyboard.ENTER)
+			{
+				mgrid.set_cell(CellOp.TEXT, _editing_row, _editing_col, txtFormula.text);
+			}
+		}
+		
+		private function updateFontColor():void
+		{
+			var selcolor:uint = uiFontColorPicker.selectedIndex;
+			
+			var selcells:ArrayCollection = mgrid.SelectedItems;
+			
+			if (selcells && selcells.length > 0)
+			{
+				var i:int;
+				
+				for (i=0; i < selcells.length; i++)
+				{
+					var sel:SelectedItem = selcells[i];
+					mgrid.set_cell(CellOp.STYLE_FORECOLOR, sel.rowIndex, sel.colIndex, uiFontColorPicker.selectedColor);
+				}
+				
+				mgrid.redraw = true;
+			}
+		}
+// end of toolbar support
+	]]>
+</mx:Script>
+	<mx:Label x="10" y="10" text="EXCEL FORMULA" styleName="demoTitle"/>
+	<mx:VBox right="10" left="10" top="40" bottom="10" verticalGap="3">
+		<mx:HBox width="100%">
+			<mx:Label text="Rows"/>
+			<mx:NumericStepper id="nrow" minimum="10" maximum="1000000" value="40"/>
+			<mx:Button label="Populate Data" click="populateGridData()"/>
+		</mx:HBox>
+		<mx:HBox width="100%">
+			<mx:RadioButtonGroup id="mgridSelectionMode" change="changeSelectionMode(event)"/>
+			<mx:RadioButton label="SelectRow" groupName="mgridSelectionMode" value="Row"/>
+			<mx:RadioButton label="SelectCell" groupName="mgridSelectionMode" value="Column" selected="true"/>
+			<mx:CheckBox id="btnSpreadSheetStyle" label="SpreadSheetStyle" click="changeSpreadSheetStyle()" selected="true"/>
+			<mx:CheckBox id="uiToolbarShow" label="Toolbar" click="toolbarShowHandler()" selected="true"/>
+			<mx:Label id="labelVisibleArea"/>
+		</mx:HBox>
+		<mx:HBox id="uiToolbar" width="100%" includeInLayout="true" visible="true" horizontalGap="2">
+			<mx:Button id="uiFontBold" icon="@Embed('/assets/font_bold.gif')" width="20" height="20" toggle="true" click="updateGridRangeFont()"/>
+			<mx:Button id="uiFontItalic" icon="@Embed('/assets/font_italic.gif')" width="20" height="20" toggle="true" click="updateGridRangeFont()"/>
+			<mx:Button id="uiFontUnderline" icon="@Embed('/assets/font_underline.gif')" width="20" height="20" toggle="true" click="updateGridRangeFont()"/>
+			<mx:Spacer width="5"/>
+			<mx:Button id="uiAlignLeft" icon="@Embed('/assets/align_left.gif')" width="20" height="20" toggle="true" click="updateGridRangeAlign('left')"/>
+			<mx:Button id="uiAlignMiddle" icon="@Embed('/assets/align_center.gif')" width="20" height="20" toggle="true" click="updateGridRangeAlign('center')"/>
+			<mx:Button id="uiAlignRight" icon="@Embed('/assets/align_right.gif')" width="20" height="20" toggle="true" click="updateGridRangeAlign('right')"/>
+			<mx:Spacer width="5"/>
+			<mx:Button label="Column Options" click="openColumnOptionWindow()"/>
+			<mx:Label text="FontColor"/>
+			<mx:ColorPicker id="uiFontColorPicker"/>
+			<mx:Button label="apply" click="updateFontColor()"/>
+			<mx:Label text="Formula"/>
+			<mx:TextInput id="txtFormula" width="100%" keyDown="formulaKeyDownHandler(event)"/>
+		</mx:HBox>
+		<ns1:MecGrid id="mgrid" width="100%" height="100%"/>
+	</mx:VBox>
+</mx:Canvas>

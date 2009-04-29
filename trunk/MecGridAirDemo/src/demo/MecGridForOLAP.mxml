@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="300" creationComplete="initApp()"
+	xmlns:fc="com.adobe.flex.extras.controls.*"
+	xmlns:fcc="com.adobe.flex.extras.controls.pivotComponentClasses.*" 
+	xmlns:MecGrid="com.mechan.MecGrid.*">
+<mx:Script>
+	<![CDATA[
+		import com.mechan.MecGrid.MecGrid;
+		import mx.collections.ArrayCollection;
+		
+		[Bindable]
+		private var flatData:ArrayCollection = new ArrayCollection([
+				{ Country:"India", State:"Karnataka", Region:"South-West", Company:"Horizon", Product:"Flexo",
+												Year:"2000", Quarter:"Q1", Month:"Jan", Sales:-10, Cost:5, Production: 20 },
+				{ Country:"India", State:"Tamil Nadu", Region:"South-East",Company:"Horizon", Product:"Flexo",
+												Year:"2000", Quarter:"Q1", Month:"Mar", Sales:10, Cost:5, Production: 20 },
+				{ Country:"India", State:"Kerala",    Region:"South-West", Company:"Horizon", Product:"Flexo",
+												Year:"2000", Quarter:"Q4", Month:"Nov", Sales:10, Cost:5, Production: 20},
+				{ Country:"India", State:"Assam",  Region:"North-East", Company:"Horizon", Product:"Trinetra",
+												Year:"2000", Quarter:"Q1", Month:"Feb", Sales:40, Cost:20, Production: 20 },
+				{ Country:"India", State:"Kerala",    Region:"South-West", Company:"Horizon", Product:"Trinetra",
+												Year:"2000", Quarter:"Q4", Month:"Dec", Sales:55, Cost:27.5, Production: 20 },
+				{ Country:"India", State:"Karnataka", Region:"South-West", Company:"Horizon", Product:"Trinetra",
+												Year:"2000", Quarter:"Q2", Month:"Apr", Sales:20, Cost:10, Production: 20 },
+				// confusion
+				{ Country:"India", State:"Delhi",     Region:"North-East", Company:"Confusion", Product:"Besto", 
+				                                Year:"2000", Quarter:"Q1", Month:"Jan", Sales:20, Cost:10, Production: 20 },
+				{ Country:"India", State:"Orissa",    Region:"South-East", Company:"Confusion", Product:"Besto", 
+				                                Year:"2000", Quarter:"Q1", Month:"Feb", Sales:10, Cost:5, Production: 20 },
+				{ Country:"India", State:"Gujrat",    Region:"North-West", Company:"Confusion", Product:"Besto", 
+				                                Year:"2001", Quarter:"Q4", Month:"Oct", Sales:50, Cost:25, Production: 20 },
+				{ Country:"India", State:"Delhi",     Region:"North-East", Company:"Confusion", Product:"Besto", 
+				                                Year:"2001", Quarter:"Q4", Month:"Nov", Sales:60, Cost:30, Production: 20 },
+				{ Country:"India", State:"Tamil Nadu",Region:"South-East", Company:"Confusion", Product:"Besto", 
+				                                Year:"2001", Quarter:"Q4", Month:"Dec", Sales:70, Cost:35, Production: 20},
+				{ Country:"India", State:"Gujrat",    Region:"North-West", Company:"Confusion", Product:"Best", 
+				                                Year:"2000", Quarter:"Q1", Month:"Mar", Sales:30, Cost:15, Production: 20 }]);
+		
+		private function initApp():void
+		{
+			this.txtMecGridVersion.text = "Version " + com.mechan.MecGrid.MecGrid.VERSION;			
+		}
+		
+		private function changeSpreadSheetStyle():void
+		{
+			pivotgrid.mgrid.spreadSheetStyle = btnSpreadSheetStyle.selected;
+			pivotgrid.mgrid.redraw = true;
+		}
+	]]>
+</mx:Script>
+	<mx:Label x="10" y="10" text="OLAP ANALYSIS" styleName="demoTitle"/>
+	<mx:Label y="10" right="10" id="txtMecGridVersion"/>
+	<mx:Label x="10" y="39" text="* How to use : "/>
+	<mx:Label y="39" text="To add Dimensions, drag left side Dimensions panel item to MecGrid Locked Column or Row Area" right="67" left="108"/>
+	<mx:Label y="57" text="Click and change Measure aggregator functions to get your analysis view." right="141" left="108"/>
+	<mx:CheckBox id="btnSpreadSheetStyle" y="55" label="SpreadSheetStyle" click="changeSpreadSheetStyle()" selected="false" right="10"/>
+	<fc:PivotComponent dataProvider="{flatData}" width="100%" top="80" bottom="0">
+		<mx:HBox width="100%" height="100%">
+			<mx:VBox width="100" height="100%">
+				<fcc:DimensionList dataProvider="{flatData}" height="100%" width="100%"/>
+				<fcc:MeasuresList dataProvider="{['Sales', 'Production', 'Cost']}" height="100%" width="100%" id="m1"/>
+			</mx:VBox>
+			<mx:VBox width="90%" height="100%">
+				<MecGrid:MecPivotGridEx id="pivotgrid" width="100%" height="100%" flatData="{flatData}"/>
+			</mx:VBox>
+		</mx:HBox>
+	</fc:PivotComponent>
+</mx:Canvas>
