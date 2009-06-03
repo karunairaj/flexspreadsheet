@@ -2,7 +2,7 @@
 <mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" 
 	layout="vertical" xmlns:head="layout.*" creationComplete="init()"
     width="800" height="700" 
-	xmlns:MecGrid="com.mechan.MecGrid.*" xmlns:demo="demo.*">
+	xmlns:MecGrid="com.mechan.MecGrid.*" xmlns:demo="demo.*" viewSourceURL="srcview/index.html">
 <mx:Script>
 	<![CDATA[
 		import mx.collections.XMLListCollection;
@@ -20,6 +20,7 @@
 		
 		import com.mechan.MecGrid.*;
 		import com.mechan.MecGrid.mecGridClasses.*;
+		import com.mechan.export.MecExporter;
 		
 		[Bindable]
 		[Embed(source="/assets/export.png")]
@@ -175,26 +176,23 @@
 		private function exportFileSelectedHandler(event:Event):void
 		{
 			var mgrid:MecGrid = Object(vprop.selectedChild).mgrid;
-			var bt:ByteArray = mgrid.ExportToExel("Sheet1");
 			
-			try
-			{
-				if (bt == null)
-				{
-					Alert.show("Grid is empty or error while get cell data");
-					return;
-				}
-				
-				var f:File = event.target as File;
-				var fs:FileStream = new FileStream();
-				fs.open(f, FileMode.WRITE);
-				fs.writeBytes(bt);
-				fs.close();
-			}
-			catch (e:Error)
-			{
-				Alert.show(e.message);
-			}
+			var exp:MecExporter = new MecExporter();
+			
+			// add MecGrid with sheetname
+			exp.AddDataGrid(mgrid, "");
+			
+			// exporting to binary data
+			var ebt:ByteArray = exp.Export2BiffExcel();
+			
+			// save file
+			var f:File = event.target as File;
+			var fs:FileStream = new FileStream();
+			fs.open(f, FileMode.WRITE);
+			fs.writeBytes(ebt);
+			fs.close();
+			
+			Alert.show("Excel file is saved successfully");
 		}
 	]]>
 </mx:Script>
