@@ -96,6 +96,11 @@ if ( hasProductInstall && !hasRequestedVersion ) {
    	+ '<a href=http://www.adobe.com/go/getflash/>Get Flash</a>';
     document.write(alternateContent);  // insert non-flash content
   }
+  
+  function loadExcelFile(bytestring) 
+  {
+      window.open ("data:application/vnd.ms-excel;base64," + bytestring, "", "width=300,height=300,resizable=1");
+  }
 // -->
 </script>
 <noscript>
@@ -117,14 +122,5 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 			</embed>
 	</object>
 </noscript>
-<script type="text/javascript">
-var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-</script>
-<script type="text/javascript">
-try {
-var pageTracker = _gat._getTracker("UA-7024680-1");
-pageTracker._trackPageview();
-} catch(err) {}</script>
 </body>
 </html>
