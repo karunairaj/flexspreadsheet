@@ -99,14 +99,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
   
   function loadExcelFile(bytestring) 
   {
-  	if (isIE)
-  	{
-  		alert("Excel file is converted in Base64 Text. \n Internet Explorer do not support directly download URI file \n Use Mozilla Firefox to download Excel file");
-  	}
-  	else
-  	{
       window.open ("data:application/vnd.ms-excel;base64," + bytestring, "", "width=300,height=300,resizable=1");
-    }
   }
 // -->
 </script>
@@ -129,15 +122,5 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 			</embed>
 	</object>
 </noscript>
-<script type="text/javascript">
-var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-
-</script>
-<script type="text/javascript">
-try {
-var pageTracker = _gat._getTracker("UA-7024680-1");
-pageTracker._trackPageview();
-} catch(err) {}</script>
 </body>
 </html>

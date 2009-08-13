@@ -4,9 +4,7 @@
 	<![CDATA[
 		import com.mechan.MecGrid.mecGridClasses.Cell;
 		import mx.core.IFlexDisplayObject;
-		import com.mechan.utils.Format;
 		import mx.collections.ArrayCollection;
-		import com.mechan.MecGrid.mecGridClasses.CellRange;
 		import com.mechan.MecGrid.mecGridClasses.SelectedItem; 
 		import com.mechan.MecGrid.mecGridClasses.FontStyleEnum;
 		import mx.controls.Alert;

@@ -2,18 +2,12 @@
 <index>
 	<title>Source of MecGridSample</title>
 	<nodes>
-		<node label="html-template">
-			<node label="history">
-				<node icon="cssIcon" label="history.css" url="source/html-template/history/history.css.html"/>
-				<node label="history.js" url="source/html-template/history/history.js.txt"/>
-				<node icon="htmlIcon" label="historyFrame.html" url="source/html-template/history/historyFrame.html"/>
-			</node>
-			<node label="AC_OETags.js" url="source/html-template/AC_OETags.js.txt"/>
-			<node icon="htmlIcon" label="index.template.html" url="source/html-template/index.template.html"/>
-			<node icon="swfIcon" label="playerProductInstall.swf" url="source/html-template/playerProductInstall.swf"/>
-		</node>
-		<node icon="imageIcon" label="cell_coloring.gif" url="source/cell_coloring.gif.html"/>
-		<node icon="mxmlAppIcon" selected="true" label="MecGridCellBorder.mxml" url="source/MecGridCellBorder.mxml.html"/>
+		<node icon="mxmlIcon" label="CellBorderLayout.mxml" url="source/CellBorderLayout.mxml.html"/>
+		<node icon="mxmlIcon" label="MecGridCellBorder.mxml" url="source/MecGridCellBorder.mxml.html"/>
+		<node icon="mxmlIcon" label="MecGridFrozen.mxml" url="source/MecGridFrozen.mxml.html"/>
+		<node icon="mxmlIcon" label="MecGridOLAPSample.mxml" url="source/MecGridOLAPSample.mxml.html"/>
 		<node icon="mxmlIcon" label="MecGridSample.mxml" url="source/MecGridSample.mxml.html"/>
+		<node icon="mxmlAppIcon" selected="true" label="MecGridSorting.mxml" url="source/MecGridSorting.mxml.html"/>
+		<node icon="mxmlIcon" label="MecGridTemplate.mxml" url="source/MecGridTemplate.mxml.html"/>
 	</nodes>
 </index>
