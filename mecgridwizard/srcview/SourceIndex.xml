@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<index>
+	<title>Source of MecGridWizard</title>
+	<nodes>
+		<node label="html-template">
+			<node label="history">
+				<node icon="cssIcon" label="history.css" url="source/html-template/history/history.css.html"/>
+				<node label="history.js" url="source/html-template/history/history.js.txt"/>
+				<node icon="htmlIcon" label="historyFrame.html" url="source/html-template/history/historyFrame.html"/>
+			</node>
+			<node label="AC_OETags.js" url="source/html-template/AC_OETags.js.txt"/>
+			<node icon="htmlIcon" label="index.template.html" url="source/html-template/index.template.html"/>
+			<node icon="swfIcon" label="playerProductInstall.swf" url="source/html-template/playerProductInstall.swf"/>
+		</node>
+		<node label="libs">
+		</node>
+		<node icon="classpathIcon" label="src" expanded="true">
+			<node label="assets">
+				<node icon="swfIcon" label="backgrounds.swf" url="source/assets/backgrounds.swf"/>
+				<node icon="imageIcon" label="brushedMetal.jpg" url="source/assets/brushedMetal.jpg.html"/>
+				<node icon="imageIcon" label="disclose_close.png" url="source/assets/disclose_close.png.html"/>
+				<node icon="imageIcon" label="disclose_open.png" url="source/assets/disclose_open.png.html"/>
+				<node icon="imageIcon" label="downArrow.png" url="source/assets/downArrow.png.html"/>
+				<node icon="imageIcon" label="export.png" url="source/assets/export.png.html"/>
+				<node icon="imageIcon" label="fseLogo.png" url="source/assets/fseLogo.png.html"/>
+				<node icon="swfIcon" label="header.swf" url="source/assets/header.swf"/>
+				<node icon="imageIcon" label="scrolltrack.png" url="source/assets/scrolltrack.png.html"/>
+				<node icon="imageIcon" label="thumb.png" url="source/assets/thumb.png.html"/>
+				<node icon="imageIcon" label="undo.png" url="source/assets/undo.png.html"/>
+				<node icon="imageIcon" label="upArrow.png" url="source/assets/upArrow.png.html"/>
+			</node>
+			<node label="css">
+				<node icon="cssIcon" label="MecStyle.css" url="source/css/MecStyle.css.html"/>
+			</node>
+			<node label="fonts">
+				<node label="MyriadWebPro-Bold.ttf" url="source/fonts/MyriadWebPro-Bold.ttf"/>
+				<node label="MyriadWebPro.ttf" url="source/fonts/MyriadWebPro.ttf"/>
+			</node>
+			<node icon="packageIcon" label="layout" expanded="true">
+				<node icon="mxmlIcon" label="GlassHeaders.mxml" url="source/layout/GlassHeaders.mxml.html"/>
+			</node>
+			<node icon="mxmlIcon" label="MecGridCellStyle.mxml" url="source/MecGridCellStyle.mxml.html"/>
+			<node icon="mxmlAppIcon" selected="true" label="MecGridWizard.mxml" url="source/MecGridWizard.mxml.html"/>
+			<node icon="mxmlIcon" label="ViewResourceString.mxml" url="source/ViewResourceString.mxml.html"/>
+		</node>
+	</nodes>
+</index>
