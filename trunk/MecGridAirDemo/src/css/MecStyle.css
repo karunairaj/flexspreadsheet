@@ -1,0 +1,139 @@
+/* CSS file */
+Application {
+    paddingRight: 10;
+    paddingLeft: 10;
+    paddingTop: 10;
+    paddingBottom: 0;    
+}
+
+.glassPanel {
+    backgroundSize: "100%";
+    backgroundImage: Embed(source="/assets/header.swf#glassHeader");
+    paddingTop: 7;
+    paddingLeft: 10;
+}
+
+.glassLabels {
+    color: #FFFFFF;
+    fontSize: 12;
+    fontWeight: bold;
+    paddingLeft: 0;
+    paddingTop: 0;
+    fontFamily: Myriad;
+}
+
+.fseTree {
+    backgroundAlpha: 0;
+    rollOverColor: #c7c7c7;
+    borderStyle: none;
+    selectionColor: #ffffff;
+    indentation: 10;
+    verticalScrollBarStyleName: "fseVerticalScrollBar";
+}    
+
+@font-face {
+    src: url("../fonts/MyriadWebPro.ttf") ;
+    fontFamily: Myriad;
+    unicodeRange:
+           U+0041-U+005A, /* Upper-Case [A..Z] */
+           U+0061-U+007A, /* Lower-Case a-z */
+           U+0030-U+0039, /* Numbers [0..9] */
+           U+002E-U+002E; /* Period [.] */
+}
+
+@font-face {
+    src: url("../fonts/MyriadWebPro-Bold.ttf") ;
+    fontFamily: Myriad;
+    fontWeight: bold;
+    unicodeRange:
+           U+0041-U+005A; /* Upper-Case [A..Z] */
+}
+
+.styleExplorerTitle {
+    fontFamily: Myriad;
+    fontSize: 24;
+    color: #FFFFFF;
+    fontWeight: normal;
+}
+
+.fseControlBar {
+   cornerRadius: 8;
+   borderStyle: solid;
+   borderThickness: 0;
+   backgroundColor: #000000;
+   backgroundAlpha: 0.1;
+}
+
+.glassPods {
+    borderStyle: applicationControlBar;
+    fillColors: #FFFFFF, #FFFFFF;
+    fillAlphas: 0, 0.25;
+    highlightAlphas: 0, 0;
+    backgroundColor: #ffffff;
+    backgroundAlpha: .2;
+    borderThickness: 0;
+    dropShadowEnabled: true;
+    cornerRadius: 8;
+    paddingRight: 0;
+    paddingLeft: 0;
+    paddingTop: 0;
+    paddingBottom: 0;
+    horizontalScrollBarStyleName: fseVerticalScrollBar;
+    verticalScrollBarStyleName: fseVerticalScrollBar;
+}
+
+.fseVerticalScrollBar {
+    downArrowUpSkin: Embed(source="/assets/downArrow.png");
+    downArrowOverSkin: Embed(source="/assets/downArrow.png");
+    downArrowDownSkin: Embed(source="/assets/downArrow.png");
+    upArrowUpSkin: Embed(source="/assets/upArrow.png");
+    upArrowOverSkin: Embed(source="/assets/upArrow.png");
+    upArrowDownSkin: Embed(source="/assets/upArrow.png");
+    thumbDownSkin: Embed(source="/assets/thumb.png",
+        scaleGridLeft="7", scaleGridTop="5", scaleGridRight="8", scaleGridBottom="7");
+    thumbUpSkin: Embed(source="/assets/thumb.png",
+        scaleGridLeft="7", scaleGridTop="5", scaleGridRight="8", scaleGridBottom="7");
+    thumbOverSkin: Embed(source="/assets/thumb.png",
+        scaleGridLeft="7", scaleGridTop="5", scaleGridRight="8", scaleGridBottom="7");
+    trackSkin: Embed(source="/assets/scrolltrack.png",
+        scaleGridLeft="7", scaleGridTop="4", scaleGridRight="8", scaleGridBottom="6" );    
+}
+
+.undoLink {
+    textDecoration: underline;
+    fontFamily: Verdana;
+    fontSize: 9;
+    fontWeight: normal;    
+    icon: Embed(source="/assets/undo.png");
+    rollOverColor: #FFFFFF;
+    selectionColor: #FFFFFF;
+    textSelectionColor: #000000;
+}
+
+.footerLink {
+    fontFamily: Verdana;
+    fontSize: 9;
+    fontWeight: normal;
+    color: #FFFFFF;    
+    rollOverColor: #FFFFFF;
+    textRollOverColor: #FFFFFF;
+    selectionColor: #FFFFFF;
+    textSelectionColor: #000000;
+}
+
+.csForm {
+		paddingRight: 3;
+		paddingLeft: 3;
+		paddingTop: 3;
+		paddingBottom: 3;
+		borderThickness: 0;
+		verticalGap: 2;
+		textAlign: left;
+}
+
+.demoTitle {
+	fontFamily: Myriad;
+    fontSize: 20;
+    color: #5A5B22;
+    fontWeight: normal;
+}
