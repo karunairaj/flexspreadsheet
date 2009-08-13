@@ -2,13 +2,8 @@
 // Detect Client Browser type
 // Copyright(c) 2005-2006 Adobe Macromedia Software, LLC. All rights reserved.
 var isIE  = (navigator.appVersion.indexOf("MSIE") != -1) ? true : false;
-var isWin = (navigator.platform.toLowerCase().indexOf("win") != -1) ? true : false; 
+var isWin = (navigator.platform.toLowerCase().indexOf("win") != -1) ? true : false;
 var isOpera = (navigator.userAgent.indexOf("Opera") != -1) ? true : false;
-
-if (isIE == true && isWin == false)
-{
-	isWin = true;
-}
 
 function ControlVersion()
 {

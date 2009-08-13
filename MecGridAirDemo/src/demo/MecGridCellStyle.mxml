@@ -2,7 +2,6 @@
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="300" xmlns:ns1="com.mechan.MecGrid.*" creationComplete="initApp()">
 <mx:Script>
 	<![CDATA[
-		import com.mechan.MecGrid.mecGridClasses.CellRange;
 		import mx.collections.ArrayCollection; 
 		import mx.controls.Alert;
 		import com.mechan.MecGrid.mecGridClasses.MecGridEvent;
