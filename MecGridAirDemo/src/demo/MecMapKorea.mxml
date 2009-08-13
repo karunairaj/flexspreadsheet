@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="300" xmlns:ns1="com.mechan.map.*">
+<mx:Script>
+	<![CDATA[
+		import mx.collections.ArrayCollection;
+		import com.mechan.map.HitTestInfo;
+		import com.mechan.map.MapEvent;
+		import com.mechan.map.MapItem;
+		
+		private function testButton1():void
+		{
+			mapbase.setRegionalColor("경기", 0x85DB18);
+			mapbase.setRegionalColor("강원", 0xCDE855);
+			mapbase.setRegionalColor("경남", 0xF5F6D4);
+			mapbase.setRegionalColor("경북", 0xA7C520);
+			mapbase.setRegionalColor("전남", 0x493F0B);
+			mapbase.setRegionalColor("전북", 0x7E8AA2);
+			mapbase.setRegionalColor("충남", 0xFFC0A9);
+			mapbase.setRegionalColor("충북", 0x7D8A2E);
+			mapbase.setRegionalColor("제주", 0xFF8598);
+			mapbase.setRegionalColor("서울", 0xFF9800);
+			mapbase.setRegionalColor("울산", 0xD1DBBD);
+			mapbase.setRegionalColor("부산", 0x7E8AA2);
+			mapbase.setRegionalColor("대구", 0x96CA2D);
+			mapbase.setRegionalColor("광주", 0xB5E655);
+			mapbase.setRegionalColor("대전", 0xEDF7F2);
+			mapbase.setRegionalColor("인천", 0x4BB5C1);
+		}
+		
+		private function mapItemClickHandler(event:MapEvent):void
+		{
+			var hit:HitTestInfo = event.hit;
+			
+			if (hit.hitItem.text == "서울")
+			{
+				map_detail.visible = true;
+			}
+		}
+		
+		private function exportMapData():void
+		{
+			var map:ArrayCollection = mapbase.exportMapData();
+		}
+	]]>
+</mx:Script>
+	<mx:VBox x="0" y="75" width="100%" height="100%">
+		<ns1:MapKorea id="mapbase" width="100%" height="100%" ShowLabel="{cbShowLabel.selected}" itemClicked="mapItemClickHandler(event)"/>
+	</mx:VBox>
+	<mx:TitleWindow id="map_detail" showCloseButton="true" left="30" top="120" right="30" bottom="30" visible="false" close="{map_detail.visible = false}">
+		<ns1:MapSeoulDistrict id="map_seoul" width="100%" height="100%" ShowLabel="{cbShowLabel.selected}"/>
+	</mx:TitleWindow>
+	<mx:Button x="10" y="32" label="Button" click="testButton1()"/>
+	<mx:CheckBox x="83" y="32" label="Checkbox" id="cbShowLabel"/>
+	<mx:Button x="173" y="32" label="Export" click="exportMapData()"/>
+</mx:Canvas>
